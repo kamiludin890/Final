@@ -72,6 +72,7 @@ if (isset($_POST['id'])) {
         });
     });
     $("#submit-material").click(function() {
+        var id = "<?php echo isset($_POST['id']) ? $_POST['id'] : ''; ?>";
         var namaMaterial = $("#nama-material").val();
         var tipeMaterialId = $("#tipe-material").val();
         var harga = $("#harga").val();
@@ -80,6 +81,7 @@ if (isset($_POST['id'])) {
         var status = "<?php echo $status; ?>";
 
         console.log("Data yang akan dikirim:", {
+            id: id,
             namaMaterial: namaMaterial,
             tipe_material: tipeMaterialId,
             harga: harga,

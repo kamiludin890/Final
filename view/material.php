@@ -1,58 +1,87 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
 ?>
-<div class="mt-1">
-    <label class="btn btn-success" id="add-material"><i class="bi bi-plus-square"></i></label>
+
+<div class="mt-2 d-flex gap-2">
+    <label class="btn btn-success" id="add-material">Tambah</label>
     <label class="btn btn-warning" id="config-material"><i class="bi bi-wrench"></i></label>
+    <input type="text" id="search" class="form-control w-25" placeholder="Cari material...">
 </div>
-<div id="tabel-purchase-order" class="mt-1">
-    <table class="table table-bordered border-dark table-hover">
-        <thead>
-            <tr class="table-warning">
-                <th>No</th>
-                <th>Kode Material</th>
-                <th>Tipe Material</th>
-                <th>Nama Material</th>
-                <th>Satuan</th>
-                <th>Harga</th>
-                <th>Mata Uang</th>
-            </tr>
-        </thead>
-        <tbody id="tabel-isi">
-        </tbody>
-    </table>
-</div>
+
+<table class="table table-bordered mt-2">
+    <thead class="table-warning">
+        <tr>
+            <th>No</th>
+            <th>Kode</th>
+            <th>Nama</th>
+            <th>Tipe</th>
+            <th>Satuan</th>
+            <th>Harga</th>
+            <th>Currency</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody id="tabel-isi"></tbody>
+</table>
+
 <script>
+    function loadData(search = '') {
+        $.post('/model/list_material.php', {
+            search: search
+        }, function(res) {
+            let html = '';
+            res.forEach((d, i) => {
+                html += `
+            <tr>
+                <td>${i+1}</td>
+                <td>${d.kode_material}</td>
+                <td>${d.nama_material_internal}</td>
+                <td>${d.tipe_material}</td>
+                <td>${d.satuan}</td>
+                <td>${d.harga}</td>
+                <td>${d.currency}</td>
+                <td>
+                    <button class="btn btn-sm btn-primary edit" data='${JSON.stringify(d)}'>Edit</button>
+                    <button class="btn btn-sm btn-danger delete" data-id="${d.id}">Hapus</button>
+                </td>
+            </tr>`;
+            });
+            $('#tabel-isi').html(html);
+        }, 'json');
+    }
+
+    function loadTipe() {
+        $.post('/model/list_tipe.php', function(res) {
+            let opt = '';
+            res.forEach(d => {
+                opt += `<option value="${d.id}">${d.nama_tipe_material}</option>`;
+            });
+            $('#tipe').html(opt);
+        }, 'json');
+    }
+
     $(document).ready(function() {
-        $.ajax({
-            url: '/model/list_material.php',
-            method: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                var tabelIsi = $('#tabel-isi');
-                tabelIsi.empty();
-                data.forEach(function(item, index) {
-                    var totalHarga = item.qty * item.harga;
-                    var row = '<tr>' +
-                        '<td>' + (index + 1) + '</td>' +
-                        '<td>' + item.kode_material + '</td>' +
-                        '<td>' + item.nama_material_internal + '</td>' +
-                        '<td>' + item.tipe_material + '</td>' +
-                        '<td>' + item.satuan + '</td>' +
-                        '<td>' + item.harga + '</td>' +
-                        '<td>' + item.currency + '</td>' +
-                        '</tr>';
-                    tabelIsi.append(row);
+        loadData();
+        loadTipe();
+
+        $('#search').keyup(function() {
+            loadData($(this).val());
+        });
+
+        $("#add-material").click(function() {
+            $("#third-content").hide();
+            $("#fourth-content").load("view/form/material.php");
+        });
+
+        $(document).on('click', '.delete', function() {
+            if (confirm('Hapus data?')) {
+                $.post('/model/delete_material.php', {
+                    id: $(this).data('id')
+                }, function() {
+                    loadData();
                 });
-            },
-            error: function(xhr, status, error) {
-                console.error('Error fetching purchase order data:', error);
             }
         });
-    });
-    $("#add-material").click(function() {
-        $("#third-content").hide();
-        $("#fourth-content").load("view/form/material.php");
     });
     $("#config-material").click(function() {
         $("#third-content").hide();

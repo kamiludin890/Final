@@ -20,4 +20,13 @@ if ($status_form == "INSERT") {
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Gagal menambahkan material: ' . $stmt->error]);
     }
+} elseif ($status_form == "UPDATE") {
+    $id = $_POST['id'];
+    $stmt = $conn->prepare("UPDATE material SET nama_material_internal = ?, tipe_material = ?, harga = ?, currency = ?, satuan = ? WHERE id = ?");
+    $stmt->bind_param("sssssi", $_POST['nama_material'], $_POST['tipe_material'], $_POST['harga'], $_POST['currency'], $_POST['satuan'], $id);
+    if ($stmt->execute()) {
+        echo json_encode(['status' => 'success', 'message' => 'Material berhasil diupdate']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Gagal mengupdate material: ' . $stmt->error]);
+    }
 }

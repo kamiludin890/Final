@@ -3,13 +3,13 @@ include $_SERVER['DOCUMENT_ROOT'] . '/database/koneksi.php';
 
 $search = $_POST['search'] ?? '';
 
-$query = "SELECT * FROM material WHERE 1=1";
+$query = "SELECT * FROM customer_supplier WHERE 1=1";
 
 if ($search) {
-    $query .= " AND (kode_material LIKE ? OR nama_material_internal LIKE ?)";
+    $query .= " AND (nama_customer_supplier LIKE ? OR alamat LIKE ? OR tipe LIKE ? OR phone LIKE ? OR email LIKE ? OR tax_number LIKE ?)";
     $stmt = $conn->prepare($query);
     $search = "%$search%";
-    $stmt->bind_param("ss", $search, $search);
+    $stmt->bind_param("ssssss", $search, $search, $search, $search, $search, $search);
     $stmt->execute();
     $res = $stmt->get_result();
 } else {
