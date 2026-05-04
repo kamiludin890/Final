@@ -4,6 +4,7 @@ node_modules
 deploy
 vendor
 #files
+database/config.php
 composer.lock
 composer.phar
 composer-setup.php

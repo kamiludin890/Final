@@ -3,7 +3,7 @@
         <div class="row ">
             <div class="col mt-2">
                 <div class="card card-hov">
-                    <div class="card-body">
+                    <div class="card-body" id="akun">
                         <i class="bi bi-person fs-1"></i>
                         <h5 class="card-title">Pengguna</h5>
                     </div>
@@ -11,7 +11,7 @@
             </div>
             <div class="col mt-2">
                 <div class="card card-hov">
-                    <div class="card-body">
+                    <div class="card-body" id="akun_akses">
                         <i class="bi bi-people fs-1"></i>
                         <h5 class="card-title">Akun & Akses</h5>
                     </div>
@@ -49,3 +49,22 @@
     </div>
 </div>
 <div id="third-content"></div>
+<script>
+    $("#akun").click(function() {
+        $("#second-content").hide();
+        $("#third-content").load("view/pengaturan/akun.php");
+    });
+    $("#akun_akses").click(function() {
+        $("#second-content").hide();
+        $("#third-content").load("view/pengaturan/akun_akses.php");
+    });
+    $("#database").click(function() {
+        $("#second-content").hide();
+        $("#third-content").load("view/pengaturan/koneksi_database.php");
+    });
+
+    $("#import_db").click(function() {
+        $("#second-content").hide();
+        $("#third-content").load("view/pengaturan/import_databse.php");
+    });
+</script>
