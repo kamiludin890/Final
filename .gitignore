@@ -3,6 +3,7 @@
 node_modules
 deploy
 vendor
+database/data
 #files
 database/config.php
 composer.lock

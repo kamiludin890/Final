@@ -49,3 +49,26 @@
     </div>
 </div>
 <div id="third-content"></div>
+<div id="fourth-content"></div>
+<script>
+    $("#material").click(function() {
+        $("#second-content").hide();
+        $("#third-content").load("view/material.php");
+    });
+    $("#purchase_order").click(function() {
+        $("#second-content").hide();
+        $("#third-content").load("view/purchase_order.php");
+    });
+    $("#invoice").click(function() {
+        $("#second-content").hide();
+        $("#third-content").load("view/invoice.php");
+    });
+    $("#customer_supplier").click(function() {
+        $("#second-content").hide();
+        $("#third-content").load("view/customer_supplier.php");
+    });
+    $("#in_out_material").click(function() {
+        $("#second-content").hide();
+        $("#third-content").load("view/in_out_material.php");
+    });
+</script>

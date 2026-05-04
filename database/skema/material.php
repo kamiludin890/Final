@@ -5,6 +5,7 @@ $skema = "CREATE TABLE IF NOT EXISTS material (
     nama_material_internal text,
     tipe_material text,
     harga DECIMAL(15,2),
+    currency VARCHAR(10),
     satuan VARCHAR(50),
     status TINYINT DEFAULT 1
 );";
