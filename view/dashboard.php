@@ -40,8 +40,6 @@
         $.post("controller/DashboardController.php", function(res) {
 
             let data = JSON.parse(res);
-
-            // ===== BAR CHART =====
             new Chart(document.getElementById("barChart"), {
                 type: "bar",
                 data: {
@@ -53,7 +51,6 @@
                 }
             });
 
-            // ===== PIE CHART =====
             new Chart(document.getElementById("pieChart"), {
                 type: "pie",
                 data: {
@@ -64,7 +61,6 @@
                 }
             });
 
-            // ===== LINE CHART =====
             new Chart(document.getElementById("lineChart"), {
                 type: "line",
                 data: {

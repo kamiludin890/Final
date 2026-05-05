@@ -1,108 +1,116 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_third.php';
-if (isset($_POST['id'])) {
-    $status = "UPDATE";
-} {
-    $status = "INSERT";
-}
+
+$id = $_POST['id'] ?? null;
+$status = $id ? "UPDATE" : "INSERT";
 ?>
+
 <div>
     <div class="mb-3">
-        <label for="nama-material" class="form-label">Nama Material</label>
+        <label class="form-label">Nama Material</label>
         <input type="text" class="form-control" id="nama-material">
     </div>
+
     <div class="mb-3">
-        <label for="tipe-material" class="form-label">Tipe Material</label>
-        <select class="form-control" id="tipe-material">
-            <option value=""></option>
-        </select>
+        <label class="form-label">Tipe Material</label>
+        <select class="form-control" id="tipe-material"></select>
     </div>
+
     <div class="row">
         <div class="col-5">
-            <div class="mb-3">
-                <label for="harga" class="form-label">Harga</label>
-                <input type="number" class="form-control" id="harga">
-            </div>
+            <label class="form-label">Harga</label>
+            <input type="number" class="form-control" id="harga">
         </div>
+
         <div class="col-5">
-            <div class="mb-3">
-                <label for="satuan" class="form-label">Satuan</label>
-                <input type="text" class="form-control" id="satuan">
-            </div>
+            <label class="form-label">Satuan</label>
+            <input type="text" class="form-control" id="satuan">
         </div>
+
         <div class="col-2">
-            <div class="mb-3">
-                <label for="currency" class="form-label">Currency</label>
-                <select class="form-control" id="currency">
-                </select>
-            </div>
+            <label class="form-label">Currency</label>
+            <select class="form-control" id="currency"></select>
         </div>
     </div>
-    <button type="submit" id="submit-material" class="btn btn-primary">Submit</button>
+
+    <button id="submit-material" class="btn btn-primary mt-2">Submit</button>
 </div>
+
 <script>
+    var id = "<?= $id ?>";
+    var status = "<?= $status ?>";
+
     $(document).ready(function() {
+
+        // LOAD TIPE MATERIAL
         $.get("model/list_tipe_material.php", function(data) {
+            if (typeof data === "string") data = JSON.parse(data);
 
-            if (typeof data === "string") {
-                data = JSON.parse(data);
-            }
-
-            var tipeMaterialSelect = $("#tipe-material");
-
-            data.forEach(function(tipe) {
-                tipeMaterialSelect.append(
+            data.forEach(tipe => {
+                $("#tipe-material").append(
                     `<option value="${tipe.id}">${tipe.nama_tipe_material}</option>`
                 );
             });
+
+            loadMaterialIfEdit();
         });
+
+        // LOAD CURRENCY
         $.get("model/list_currency.php", function(data) {
+            if (typeof data === "string") data = JSON.parse(data);
 
-            if (typeof data === "string") {
-                data = JSON.parse(data);
-            }
-
-            var currencySelect = $("#currency");
-
-            data.forEach(function(currency) {
-                currencySelect.append(
-                    `<option value="${currency.currency}">${currency.currency}</option>`
+            data.forEach(cur => {
+                $("#currency").append(
+                    `<option value="${cur.currency}">${cur.currency}</option>`
                 );
             });
         });
     });
-    $("#submit-material").click(function() {
-        var id = "<?php echo isset($_POST['id']) ? $_POST['id'] : ''; ?>";
-        var namaMaterial = $("#nama-material").val();
-        var tipeMaterialId = $("#tipe-material").val();
-        var harga = $("#harga").val();
-        var satuan = $("#satuan").val();
-        var currency = $("#currency").val();
-        var status = "<?php echo $status; ?>";
 
-        console.log("Data yang akan dikirim:", {
-            id: id,
-            namaMaterial: namaMaterial,
-            tipe_material: tipeMaterialId,
-            harga: harga,
-            satuan: satuan,
-            currency: currency,
-            status: status
+    function loadMaterialIfEdit() {
+        if (!id) return;
+
+        $.post("model/list_material.php", {
+            id: id
+        }, function(data) {
+
+            if (typeof data === "string") data = JSON.parse(data);
+
+            if (data.length === 0) return;
+
+            let m = data[0];
+
+            $("#nama-material").val(m.nama_material_internal);
+            $("#tipe-material").val(m.tipe_material);
+            $("#harga").val(m.harga);
+            $("#satuan").val(m.satuan);
+            $("#currency").val(m.currency);
+
         });
+    }
+
+    // SUBMIT
+    $("#submit-material").click(function() {
 
         $.post("model/material.php", {
-            nama_material: namaMaterial,
-            tipe_material: tipeMaterialId,
-            harga: harga,
-            satuan: satuan,
-            currency: currency,
+            id: id,
+            nama_material: $("#nama-material").val(),
+            tipe_material: $("#tipe-material").val(),
+            harga: $("#harga").val(),
+            satuan: $("#satuan").val(),
+            currency: $("#currency").val(),
             status: status
-        }, function(response) {
-            alert(response.message);
-            if (response.success) {
+        }, function(res) {
+
+            if (typeof res === "string") res = JSON.parse(res);
+
+            alert(res.message);
+
+            if (res.success) {
                 $("#fourth-content").html("");
                 $("#third-content").show();
             }
+
         }, "json");
     });
 </script>

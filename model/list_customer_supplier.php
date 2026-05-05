@@ -1,7 +1,18 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . '/database/koneksi.php';
 
+$id = $_POST['id'] ?? null;
 $search = $_POST['search'] ?? '';
+
+if ($id) {
+    $stmt = $conn->prepare("SELECT * FROM customer_supplier WHERE id = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+    echo json_encode($res->fetch_assoc());
+    exit;
+}
 
 $query = "SELECT * FROM customer_supplier WHERE 1=1";
 
@@ -15,6 +26,7 @@ if ($search) {
 } else {
     $res = $conn->query($query);
 }
+
 $data = [];
 while ($r = $res->fetch_assoc()) $data[] = $r;
 

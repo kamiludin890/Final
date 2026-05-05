@@ -42,7 +42,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
                 <td>${d.email}</td>
                 <td>${d.tax_number}</td>
                 <td>
-                    <button class="btn btn-sm btn-primary edit" data='${JSON.stringify(d)}'>Edit</button>
+                    <button class="btn btn-sm btn-primary edit-cus-sup" data-id='${d.id}'>Edit</button>
                     <button class="btn btn-sm btn-danger delete" data-id="${d.id}">Hapus</button>
                 </td>
             </tr>`;
@@ -53,7 +53,6 @@ include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
 
     $(document).ready(function() {
         loadData();
-        loadTipe();
 
         $('#search').keyup(function() {
             loadData($(this).val());
@@ -72,6 +71,14 @@ include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
                     loadData();
                 });
             }
+        });
+    });
+    $(document).on('click', '.edit-cus-sup', function() {
+        $.post('view/form/customer_supplier.php', {
+            id: $(this).data('id')
+        }, function(data) {
+            $("#third-content").hide();
+            $("#fourth-content").html(data);
         });
     });
 </script>

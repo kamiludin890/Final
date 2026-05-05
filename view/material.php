@@ -41,7 +41,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
                 <td>${d.harga}</td>
                 <td>${d.currency}</td>
                 <td>
-                    <button class="btn btn-sm btn-primary edit" data='${JSON.stringify(d)}'>Edit</button>
+                    <button class="btn btn-sm btn-primary edit-material" data-id='${d.id}'>Edit</button>
                     <button class="btn btn-sm btn-danger delete" data-id="${d.id}">Hapus</button>
                 </td>
             </tr>`;
@@ -51,7 +51,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
     }
 
     function loadTipe() {
-        $.post('/model/list_tipe.php', function(res) {
+        $.post('/model/list_tipe_material.php', function(res) {
             let opt = '';
             res.forEach(d => {
                 opt += `<option value="${d.id}">${d.nama_tipe_material}</option>`;
@@ -86,5 +86,13 @@ include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
     $("#config-material").click(function() {
         $("#third-content").hide();
         $("#fourth-content").load("view/form/tipe_material.php");
+    });
+    $(document).on('click', '.edit-material', function() {
+        $.post('view/form/material.php', {
+            id: $(this).data('id')
+        }, function(data) {
+            $("#third-content").hide();
+            $("#fourth-content").html(data);
+        });
     });
 </script>

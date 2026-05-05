@@ -76,4 +76,58 @@ if ($status_form == "INSERT") {
             'message' => $stmt->error
         ]);
     }
+} elseif ($status_form == "UPDATE") {
+
+    $id     = $_POST['id'] ?? 0;
+    $tipe   = $_POST['tipe'] ?? '';
+    $nama   = $_POST['nama'] ?? '';
+    $alamat = $_POST['alamat'] ?? '';
+    $email  = $_POST['email'] ?? '';
+    $phone  = $_POST['phone'] ?? '';
+    $tlpn   = $_POST['tlpn'] ?? '';
+    $tax    = $_POST['taxNumber'] ?? '';
+
+    // Validasi dasar
+    if (!$id) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'ID tidak ditemukan'
+        ]);
+        exit;
+    }
+
+    $sql = "UPDATE customer_supplier SET
+                tipe = ?,
+                nama_customer_supplier = ?,
+                alamat = ?,
+                email = ?,
+                phone = ?,
+                tlpn = ?,
+                tax_number = ?
+            WHERE id = ?";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param(
+        "sssssssi",
+        $tipe,
+        $nama,
+        $alamat,
+        $email,
+        $phone,
+        $tlpn,
+        $tax,
+        $id
+    );
+
+    if ($stmt->execute()) {
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Data berhasil diupdate'
+        ]);
+    } else {
+        echo json_encode([
+            'status' => 'error',
+            'message' => $stmt->error
+        ]);
+    }
 }

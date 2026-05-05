@@ -2,8 +2,10 @@
 include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_third.php';
 if (isset($_POST['id'])) {
     $status = "UPDATE";
-} {
+    $id = $_POST['id'];
+} else {
     $status = "INSERT";
+    $id = "";
 }
 ?>
 <div>
@@ -44,7 +46,7 @@ if (isset($_POST['id'])) {
 </div>
 <script>
     $("#submit-customer-supplier").click(function() {
-        var id = "<?php echo isset($_POST['id']) ? $_POST['id'] : ''; ?>";
+        var id = "<?= $id ?>";
         var tipe = $("#tipe").val();
         var nama = $("#nama-customer-supplier").val();
         var alamat = $("#alamat").val();
@@ -75,5 +77,25 @@ if (isset($_POST['id'])) {
                 loadData();
             }
         }, "json");
+    });
+    $(document).ready(function() {
+        var id = "<?= $id ?>";
+        var status = "<?= $status ?>";
+
+        if (status === "UPDATE" && id) {
+            $.post('/model/list_customer_supplier.php', {
+                id: id
+            }, function(data) {
+
+                $("#tipe").val(data.tipe);
+                $("#nama-customer-supplier").val(data.nama_customer_supplier);
+                $("#alamat").val(data.alamat);
+                $("#email").val(data.email);
+                $("#phone").val(data.phone);
+                $("#tlpn").val(data.tlpn);
+                $("#tax-number").val(data.tax_number);
+
+            }, "json");
+        }
     });
 </script>
