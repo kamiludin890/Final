@@ -24,10 +24,32 @@ try {
         throw new Exception("Item kosong");
     }
 
-    // ================= HEADER =================
     if ($status === "INSERT") {
+        $yearMonth = date("Ym");
 
-        $no_po = "PO-" . date("Y") . "-" . rand(10000, 99999);
+        $stmtLast = $conn->prepare("
+    SELECT no_purchase_order 
+    FROM purchase_order
+    WHERE no_purchase_order LIKE ?
+    ORDER BY id DESC
+    LIMIT 1
+");
+
+        $like = "PO-" . $yearMonth . "-%";
+        $stmtLast->bind_param("s", $like);
+        $stmtLast->execute();
+        $result = $stmtLast->get_result();
+
+        $lastNumber = 0;
+
+        if ($row = $result->fetch_assoc()) {
+            $parts = explode("-", $row['no_purchase_order']);
+            $lastNumber = (int)$parts[2];
+        }
+
+        $newNumber = $lastNumber + 1;
+
+        $no_po = "PO-" . $yearMonth . "-" . str_pad($newNumber, 5, "0", STR_PAD_LEFT);
 
         $stmt = $conn->prepare("
             INSERT INTO purchase_order
@@ -63,7 +85,6 @@ try {
         $id_po = $id;
     }
 
-    // ================= ITEM =================
 
     $insert = $conn->prepare("
         INSERT INTO purchase_order_item
@@ -87,7 +108,6 @@ try {
 
         if (!$mat) continue;
 
-        // ================= UPDATE ITEM =================
         if ($item_id > 0) {
 
             $update->bind_param(
@@ -102,9 +122,7 @@ try {
             if (!$update->execute()) {
                 throw new Exception("UPDATE ITEM ERROR: " . $update->error);
             }
-        }
-        // ================= INSERT ITEM =================
-        else {
+        } else {
 
             $insert->bind_param(
                 "iisid",

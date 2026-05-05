@@ -3,14 +3,12 @@ include $_SERVER['DOCUMENT_ROOT'] . '/database/koneksi.php';
 
 $id = $_POST['id'];
 
-// HEADER
 $header = $conn->query("
     SELECT * FROM purchase_order 
     WHERE id = $id
 ")->fetch_assoc();
 
 
-// ITEMS (JOIN ke material)
 $items = [];
 $res = $conn->query("
     SELECT 
@@ -34,7 +32,7 @@ while ($row = $res->fetch_assoc()) {
         'kode_material' => $row['kode_material'],
         'nama_material_internal' => $row['nama_material_internal'],
         'nama_material' => $row['nama_material'],
-        'price' => $row['harga'], // dari master material
+        'price' => $row['harga'],
         'qty' => $row['qty'],
         'total' => $row['total']
     ];

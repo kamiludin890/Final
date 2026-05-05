@@ -59,8 +59,7 @@ if (isset($_POST['id']) && $_POST['id'] != '') {
 <script>
     var no_urut = 1;
 
-    function loadMaterialDataList(search, listId) {
-
+    function loadMaterialDataList(search) {
         $.post('model/list_material.php', {
             search: search
         }, function(data) {
@@ -79,14 +78,13 @@ if (isset($_POST['id']) && $_POST['id'] != '') {
             `;
             });
 
-            $("#" + listId).html(options);
+            $("#material-list").html(options);
 
         }, 'json');
     }
     $(document).on('input', '.material-code', function() {
-        const listId = $(this).attr('list');
         const value = $(this).val();
-        loadMaterialDataList(value, listId);
+        loadMaterialDataList(value);
     });
     $(document).on('change', '.material-code', function() {
 
@@ -119,14 +117,17 @@ if (isset($_POST['id']) && $_POST['id'] != '') {
     }
 
     $(document).ready(function() {
-        loadMaterialDataList("", "")
-
+        loadMaterialDataList()
         $.post('model/list_customer_supplier.php', {
             search: ''
         }, function(data) {
+            let options = '';
+
             data.forEach(d => {
-                $('#customer').append(`<option value="${d.id}">${d.nama_customer_supplier}</option>`);
+                options += `<option value="${d.id}">${d.nama_customer_supplier}</option>`;
             });
+
+            $('#customer').html(options);
 
             <?php if ($status == "UPDATE") { ?>
                 loadDataPO(<?= $id ?>);

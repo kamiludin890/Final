@@ -1,7 +1,7 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . "/database/koneksi.php";
 $status_form = $_POST['status'];
-$status = 1; // Default status aktif
+$status = 1;
 if ($status_form == "INSERT") {
     $pengkodean = $conn->query("SELECT pengkodean FROM tipe_material WHERE id = " . $_POST['tipe_material']);
     $pengkodean = $pengkodean->fetch_assoc()['pengkodean'];
