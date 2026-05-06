@@ -43,7 +43,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
                 <td>${d.tax_number}</td>
                 <td>
                     <button class="btn btn-sm btn-primary edit-cus-sup" data-id='${d.id}'>Edit</button>
-                    <button class="btn btn-sm btn-danger delete" data-id="${d.id}">Hapus</button>
+                    <button class="btn btn-sm btn-danger delete-cus-sup" data-id="${d.id}">Hapus</button>
                 </td>
             </tr>`;
             });
@@ -63,10 +63,11 @@ include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
             $("#fourth-content").load("view/form/customer_supplier.php");
         });
 
-        $(document).on('click', '.delete', function() {
+        $(document).on('click', '.delete-cus-sup    ', function() {
             if (confirm('Hapus data?')) {
-                $.post('/model/delete_customer_supplier.php', {
-                    id: $(this).data('id')
+                $.post('/model/customer_supplier.php', {
+                    id: $(this).data('id'),
+                    status: "DELETE"
                 }, function() {
                     loadData();
                 });

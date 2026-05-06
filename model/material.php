@@ -1,8 +1,21 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . "/database/koneksi.php";
-$status_form = $_POST['status'];
+
+header('Content-Type: application/json');
+
+$status_form = $_POST['status'] ?? '';
 $status = 1;
+
+if ($status_form == "DELETE") {
+    $id = (int)($_POST['id'] ?? 0);
+    $stmt = $conn->prepare("UPDATE material SET status = 0 WHERE id = ?");
+    $stmt->bind_param("i", $id);
+    echo json_encode(['status' => $stmt->execute() ? 'success' : 'error', 'message' => $stmt->error]);
+    exit;
+}
+
 if ($status_form == "INSERT") {
+
     $pengkodean = $conn->query("SELECT pengkodean FROM tipe_material WHERE id = " . $_POST['tipe_material']);
     $pengkodean = $pengkodean->fetch_assoc()['pengkodean'];
     $kode_material = $conn->query("SELECT MAX(kode_material) AS max_kode FROM material WHERE kode_material LIKE '$pengkodean%'");

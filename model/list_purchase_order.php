@@ -1,7 +1,10 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . '/database/koneksi.php';
 
+header('Content-Type: application/json');
+
 $search = $_POST['search'] ?? '';
+
 
 $query = "SELECT 
             po.*, 
@@ -12,7 +15,8 @@ $query = "SELECT
           FROM purchase_order po
           JOIN customer_supplier cs 
             ON po.id_customer_supplier = cs.id
-          WHERE 1=1";
+          WHERE po.status != 0";
+
 
 if ($search) {
     $query .= " AND (
@@ -43,7 +47,8 @@ if ($search) {
     $stmt->execute();
     $res = $stmt->get_result();
 } else {
-    $res = $conn->query($query);
+    $res = $conn->query($query . " ORDER BY po.id DESC");
+
 }
 
 $data = [];

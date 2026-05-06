@@ -10,7 +10,22 @@ try {
     $status = $_POST['status'] ?? '';
     $id = (int)($_POST['id'] ?? 0);
 
+    if ($status === 'DELETE') {
+        if (!$id) throw new Exception("ID tidak valid");
+        $conn->prepare("UPDATE purchase_order SET status = 0 WHERE id = ?")->bind_param("i", $id);
+        $s = $conn->prepare("UPDATE purchase_order SET status = 0 WHERE id = ?");
+        $s->bind_param("i", $id);
+        $s->execute();
+        $si = $conn->prepare("UPDATE purchase_order_item SET status = 0 WHERE id_purchase_order = ?");
+        $si->bind_param("i", $id);
+        $si->execute();
+        $conn->commit();
+        echo json_encode(["status" => "success"]);
+        exit;
+    }
+
     $customer = (int)($_POST['id_customer_supplier'] ?? 0);
+
     $tgl = $_POST['tanggal_purchase_order'] ?? null;
     $due = $_POST['tanggal_due_date'] ?? null;
 

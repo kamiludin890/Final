@@ -37,7 +37,7 @@
                     <td>${d.tanggal_due_date}</td>
                     <td>
                         <button class="btn btn-sm btn-primary edit-po" data-id='${d.id}'>Edit</button>
-                        <button class="btn btn-sm btn-danger delete" data-id="${d.id}">Hapus</button>
+                        <button class="btn btn-sm btn-danger delete-po" data-id="${d.id}">Hapus</button>
                     </td>
                 </tr>`;
                 });
@@ -57,10 +57,11 @@
                 $("#fourth-content").load("view/form/purchase_order.php");
             });
 
-            $(document).on('click', '.delete', function() {
+            $(document).on('click', '.delete-po', function() {
                 if (confirm('Hapus data?')) {
-                    $.post('/model/delete_purchase_order.php', {
-                        id: $(this).data('id')
+                    $.post('/model/purchase_order.php', {
+                        id: $(this).data('id'),
+                        status:"DELETE"
                     }, function() {
                         loadData();
                     });

@@ -1,6 +1,9 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . '/database/koneksi.php';
 
+header('Content-Type: application/json');
+
+
 $id = $_POST['id'] ?? null;
 $search = $_POST['search'] ?? '';
 
@@ -14,7 +17,8 @@ if ($id) {
     exit;
 }
 
-$query = "SELECT * FROM customer_supplier WHERE 1=1";
+$query = "SELECT * FROM customer_supplier WHERE status != 0";
+
 
 if ($search) {
     $query .= " AND (nama_customer_supplier LIKE ? OR alamat LIKE ? OR tipe LIKE ? OR phone LIKE ? OR email LIKE ? OR tax_number LIKE ?)";

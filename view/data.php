@@ -51,24 +51,26 @@
 <div id="third-content"></div>
 <div id="fourth-content"></div>
 <script>
+    function ts() { return '?_=' + Date.now(); }
+
     $("#material").click(function() {
         $("#second-content").hide();
-        $("#third-content").load("view/material.php");
+        $("#third-content").load("view/material.php" + ts());
     });
     $("#purchase_order").click(function() {
         $("#second-content").hide();
-        $("#third-content").load("view/purchase_order.php");
+        $("#third-content").load("view/purchase_order.php" + ts());
     });
     $("#invoice").click(function() {
         $("#second-content").hide();
-        $("#third-content").load("view/invoice.php");
+        $("#third-content").load("view/invoice.php" + ts());
     });
     $("#customer_supplier").click(function() {
         $("#second-content").hide();
-        $("#third-content").load("view/customer_supplier.php");
+        $("#third-content").load("view/customer_supplier.php" + ts());
     });
     $("#in_out_material").click(function() {
         $("#second-content").hide();
-        $("#third-content").load("view/in_out_material.php");
+        $("#third-content").load("view/in_out_material.php" + ts());
     });
 </script>

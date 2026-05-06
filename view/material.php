@@ -42,7 +42,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
                 <td>${d.currency}</td>
                 <td>
                     <button class="btn btn-sm btn-primary edit-material" data-id='${d.id}'>Edit</button>
-                    <button class="btn btn-sm btn-danger delete" data-id="${d.id}">Hapus</button>
+                    <button class="btn btn-sm btn-danger delete-material" data-id="${d.id}">Hapus</button>
                 </td>
             </tr>`;
             });
@@ -73,10 +73,11 @@ include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
             $("#fourth-content").load("view/form/material.php");
         });
 
-        $(document).on('click', '.delete', function() {
+        $(document).on('click', '.delete-material', function() {
             if (confirm('Hapus data?')) {
-                $.post('/model/delete_material.php', {
-                    id: $(this).data('id')
+                $.post('/model/material.php', {
+                    id: $(this).data('id'),
+                    status:"DELETE"
                 }, function() {
                     loadData();
                 });

@@ -1,10 +1,21 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . "/database/koneksi.php";
 
+header('Content-Type: application/json');
+
 $status_form = $_POST['status'] ?? '';
-$status = 1; // default aktif
+$status = 1;
+
+if ($status_form == "DELETE") {
+    $id = (int)($_POST['id'] ?? 0);
+    $stmt = $conn->prepare("UPDATE customer_supplier SET status = 0 WHERE id = ?");
+    $stmt->bind_param("i", $id);
+    echo json_encode(['status' => $stmt->execute() ? 'success' : 'error', 'message' => $stmt->error]);
+    exit;
+}
 
 if ($status_form == "INSERT") {
+
 
     $tipe   = $_POST['tipe'] ?? '';
     $nama   = $_POST['nama'] ?? '';
@@ -14,14 +25,12 @@ if ($status_form == "INSERT") {
     $tlpn   = $_POST['tlpn'] ?? '';
     $tax    = $_POST['taxNumber'] ?? '';
 
-    // Tentukan prefix kode
     if ($tipe == "customer") {
         $prefix = "CS";
     } else {
         $prefix = "SP";
     }
 
-    // Ambil kode terakhir
     $query = "SELECT MAX(kode_customer_supplier) AS max_kode 
               FROM customer_supplier 
               WHERE kode_customer_supplier LIKE ?";
@@ -34,19 +43,16 @@ if ($status_form == "INSERT") {
     $result = $stmt->get_result()->fetch_assoc();
     $max_kode = $result['max_kode'];
 
-    // Generate nomor baru
     if ($max_kode) {
-        $angka = (int) substr($max_kode, 2); // ambil angka
+        $angka = (int) substr($max_kode, 2); 
         $angka++;
     } else {
         $angka = 1;
     }
 
-    // Format jadi 4 digit
     $kode_baru = str_pad($angka, 4, '0', STR_PAD_LEFT);
     $kode_customer_supplier = $prefix . $kode_baru;
 
-    // Insert data (prepared statement)
     $sql = "INSERT INTO customer_supplier 
             (kode_customer_supplier, tipe, nama_customer_supplier, alamat, email, phone, tlpn, tax_number, status) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -87,7 +93,6 @@ if ($status_form == "INSERT") {
     $tlpn   = $_POST['tlpn'] ?? '';
     $tax    = $_POST['taxNumber'] ?? '';
 
-    // Validasi dasar
     if (!$id) {
         echo json_encode([
             'status' => 'error',

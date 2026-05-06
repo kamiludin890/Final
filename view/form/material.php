@@ -42,20 +42,19 @@ $status = $id ? "UPDATE" : "INSERT";
 
     $(document).ready(function() {
 
-        // LOAD TIPE MATERIAL
         $.get("model/list_tipe_material.php", function(data) {
             if (typeof data === "string") data = JSON.parse(data);
 
+            let options = '';
+
             data.forEach(tipe => {
-                $("#tipe-material").append(
-                    `<option value="${tipe.id}">${tipe.nama_tipe_material}</option>`
-                );
+                options += `<option value="${tipe.id}">${tipe.nama_tipe_material}</option>`;
             });
+
+            $("#tipe-material").html(options);
 
             loadMaterialIfEdit();
         });
-
-        // LOAD CURRENCY
         $.get("model/list_currency.php", function(data) {
             if (typeof data === "string") data = JSON.parse(data);
 
@@ -89,7 +88,6 @@ $status = $id ? "UPDATE" : "INSERT";
         });
     }
 
-    // SUBMIT
     $("#submit-material").click(function() {
 
         $.post("model/material.php", {
