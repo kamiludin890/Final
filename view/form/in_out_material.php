@@ -44,6 +44,8 @@ $status = $id > 0
 
                 <option value="IN">IN</option>
                 <option value="OUT">OUT</option>
+                <option value="IMPORT">IMPORT</option>
+                <option value="EXPORT">EXPORT</option>
 
             </select>
 
