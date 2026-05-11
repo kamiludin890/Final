@@ -65,4 +65,44 @@ include $_SERVER["DOCUMENT_ROOT"] . "/view/template/btn_kembali_second.php";
         $("#third-content").hide()
         $("#fourth-content").load("view/form/tipe_material.php");
     })
+    $(document).on("click", ".edit-tipe-material", function() {
+
+        let id = $(this).data("id");
+
+        $("#third-content").hide();
+
+        $("#fourth-content").load(
+            "/view/form/tipe_material.php", {
+                id: id
+            }
+        );
+    });
+
+    // DELETE
+    $(document).on("click", ".delete-tipe-material", function() {
+
+        let id = $(this).data("id");
+
+        if (confirm("Yakin ingin menghapus data ini?")) {
+
+            $.post("/model/delete_tipe_material.php", {
+                id: id
+            }, function(res) {
+
+                if (res.success) {
+
+                    alert("Data berhasil dihapus");
+
+                    loadDataTipeMaterial($("#search").val());
+
+                } else {
+
+                    alert("Gagal menghapus data");
+
+                }
+
+            }, "json");
+
+        }
+    });
 </script>
