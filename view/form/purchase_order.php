@@ -199,7 +199,6 @@ if (isset($_POST['id']) && $_POST['id'] != '') {
                 items.push(item);
             }
         });
-        console.log(items)
 
         $.post("model/purchase_order.php", {
             id: "<?= $id ?>",
