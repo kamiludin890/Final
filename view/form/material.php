@@ -13,7 +13,7 @@ $status = $id ? "UPDATE" : "INSERT";
 
     <div class="mb-3">
         <label class="form-label">Tipe Material</label>
-        <select class="form-control" id="tipe-material"></select>
+        <select class="form-control" id="tipe-material" required></select>
     </div>
 
     <div class="row">
@@ -45,7 +45,7 @@ $status = $id ? "UPDATE" : "INSERT";
         $.get("model/list_tipe_material.php", function(data) {
             if (typeof data === "string") data = JSON.parse(data);
 
-            let options = '';
+            let options = '<option></option>';
 
             data.forEach(tipe => {
                 options += `<option value="${tipe.id}">${tipe.nama_tipe_material}</option>`;

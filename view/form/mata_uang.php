@@ -45,7 +45,9 @@ $status = $id ? "UPDATE" : "INSERT";
                 deskripsi: deskripsi
             },
             function(data) {
-                console.log(data.status + data.message)
+                if (data.status) {
+                    alert(data.message)
+                }
             }, "json")
     })
 </script>

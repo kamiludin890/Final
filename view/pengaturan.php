@@ -46,7 +46,7 @@
             <div class="col mt-2">
                 <div class="card card-hov">
                     <div class="card-body" id="">
-                        <i class="bi bi-clock fs-1"></i>
+                        <i class="bi bi-building fs-1"></i>
                         <h5 class="card-title">Coming soon</h5>
                     </div>
                 </div>
