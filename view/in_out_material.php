@@ -36,7 +36,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
             res.forEach((d, i) => {
 
                 let badgeClass =
-                    d.tipe_doc === 'IN' || "IMPORT" ?
+                    d.tipe_doc === 'IN' || d.tipe_doc === 'IMPORT' ?
                     'bg-success' :
                     'bg-danger';
 

@@ -4,7 +4,6 @@ include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
 
 <div class="mt-2 d-flex gap-2">
     <label class="btn btn-success" id="add-material">Tambah</label>
-    <label class="btn btn-warning" id="config-material"><i class="bi bi-wrench"></i></label>
     <input type="text" id="search" class="form-control w-25" placeholder="Cari material...">
 </div>
 
@@ -77,16 +76,12 @@ include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
             if (confirm('Hapus data?')) {
                 $.post('/model/material.php', {
                     id: $(this).data('id'),
-                    status:"DELETE"
+                    status: "DELETE"
                 }, function() {
                     loadData();
                 });
             }
         });
-    });
-    $("#config-material").click(function() {
-        $("#third-content").hide();
-        $("#fourth-content").load("view/form/tipe_material.php");
     });
     $(document).on('click', '.edit-material', function() {
         $.post('view/form/material.php', {
