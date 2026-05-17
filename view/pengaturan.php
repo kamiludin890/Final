@@ -45,9 +45,9 @@
             </div>
             <div class="col mt-2">
                 <div class="card card-hov">
-                    <div class="card-body" id="">
+                    <div class="card-body" id="company">
                         <i class="bi bi-building fs-1"></i>
-                        <h5 class="card-title">Coming soon</h5>
+                        <h5 class="card-title">Company</h5>
                     </div>
                 </div>
             </div>
@@ -92,6 +92,10 @@
     $("#mata_uang").click(function() {
         $("#second-content").hide();
         $("#third-content").load("view/pengaturan/mata_uang.php");
+    });
+    $("#company").click(function() {
+        $("#second-content").hide();
+        $("#third-content").load("view/pengaturan/company.php");
     });
     $("#database").click(function() {
         $("#second-content").hide();
