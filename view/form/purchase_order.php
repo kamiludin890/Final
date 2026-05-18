@@ -121,10 +121,10 @@ if (isset($_POST['id']) && $_POST['id'] != '') {
         $.post('model/list_customer_supplier.php', {
             search: ''
         }, function(data) {
-            let options = '';
+            let options = '<option value="">==Pilih==</option>';
 
             data.forEach(d => {
-                options += `<option value="${d.id}">${d.nama_customer_supplier}</option>`;
+                options += `<option value="${d.id}">${d.nama_customer_supplier} | ${d.tipe}</option>`;
             });
 
             $('#customer').html(options);

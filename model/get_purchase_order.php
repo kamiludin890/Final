@@ -4,8 +4,13 @@ include $_SERVER['DOCUMENT_ROOT'] . '/database/koneksi.php';
 $id = $_POST['id'];
 
 $header = $conn->query("
-    SELECT * FROM purchase_order 
-    WHERE id = $id
+    SELECT 
+    po.*,
+    cs.nama_customer_supplier,
+    cs.tipe
+    FROM purchase_order po
+    LEFT JOIN customer_supplier cs ON po.id_customer_supplier=cs.id
+    WHERE po.id = $id
 ")->fetch_assoc();
 
 

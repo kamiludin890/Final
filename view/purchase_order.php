@@ -38,6 +38,7 @@
                     <td>
                         <button class="btn btn-sm btn-primary edit-po" data-id='${d.id}'>Edit</button>
                         <button class="btn btn-sm btn-danger delete-po" data-id="${d.id}">Hapus</button>
+                        <button class="btn btn-sm btn-warning view-po" data-id="${d.id}">View</button>
                     </td>
                 </tr>`;
                 });
@@ -61,7 +62,7 @@
                 if (confirm('Hapus data?')) {
                     $.post('/model/purchase_order.php', {
                         id: $(this).data('id'),
-                        status:"DELETE"
+                        status: "DELETE"
                     }, function() {
                         loadData();
                     });
@@ -70,6 +71,14 @@
         });
         $(document).on('click', '.edit-po', function() {
             $.post('view/form/purchase_order.php', {
+                id: $(this).data('id')
+            }, function(data) {
+                $("#third-content").hide();
+                $("#fourth-content").html(data);
+            });
+        });
+        $(document).on('click', '.view-po', function() {
+            $.post('view/print/purchase_order.php', {
                 id: $(this).data('id')
             }, function(data) {
                 $("#third-content").hide();
