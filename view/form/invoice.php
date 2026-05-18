@@ -94,14 +94,15 @@ if (isset($_POST['id']) && $_POST['id'] != '') {
 
 <script>
     var noUrut = 1;
-    var materialMap = {}; 
+    var materialMap = {};
+
     function loadMaterialDatalist() {
-        $.post('/model/list_material.php', {}, function (data) {
+        $.post('/model/list_material.php', {}, function(data) {
             let opts = '';
             data.forEach(d => {
                 materialMap[d.kode_material] = {
-                    id   : d.id,
-                    nama : d.nama_material_internal,
+                    id: d.id,
+                    nama: d.nama_material_internal,
                     harga: parseFloat(d.harga || 0)
                 };
                 opts += `<option value="${d.kode_material}">${d.nama_material_internal}</option>`;
@@ -110,10 +111,10 @@ if (isset($_POST['id']) && $_POST['id'] != '') {
         }, 'json');
     }
 
-    $(document).on('change', '.inv-material-code', function () {
+    $(document).on('change', '.inv-material-code', function() {
         const kode = $(this).val().trim();
-        const row  = $(this).closest('tr');
-        const mat  = materialMap[kode];
+        const row = $(this).closest('tr');
+        const mat = materialMap[kode];
 
         if (mat) {
             const qty = parseFloat(row.find('.inv-qty').val() || 0);
@@ -131,7 +132,7 @@ if (isset($_POST['id']) && $_POST['id'] != '') {
 
     function hitungGrandTotal() {
         let grandTotal = 0;
-        $('#invoice_items tr').each(function () {
+        $('#invoice_items tr').each(function() {
             grandTotal += parseFloat($(this).find('.inv-total').val() || 0);
         });
         $('#grand_total').val(grandTotal.toLocaleString('id-ID', {
@@ -140,9 +141,9 @@ if (isset($_POST['id']) && $_POST['id'] != '') {
         }));
     }
 
-    $(document).on('input', '.inv-qty', function () {
-        const row   = $(this).closest('tr');
-        const qty   = parseFloat($(this).val() || 0);
+    $(document).on('input', '.inv-qty', function() {
+        const row = $(this).closest('tr');
+        const qty = parseFloat($(this).val() || 0);
         const harga = parseFloat(row.find('.inv-harga').val() || 0);
         row.find('.inv-total').val((qty * harga).toFixed(2));
         hitungGrandTotal();
@@ -178,8 +179,8 @@ if (isset($_POST['id']) && $_POST['id'] != '') {
         `);
 
         if (item) {
-            const row   = $(`#inv-row-${rowId}`);
-            const qty   = parseFloat(item.qty   || 0);
+            const row = $(`#inv-row-${rowId}`);
+            const qty = parseFloat(item.qty || 0);
             const total = parseFloat(item.total || 0);
             const harga = qty > 0 ? (total / qty) : 0;
 
@@ -201,7 +202,9 @@ if (isset($_POST['id']) && $_POST['id'] != '') {
     }
 
     function loadDataInvoice(id) {
-        $.post('/model/list_invoice.php', { id: id }, function (res) {
+        $.post('/model/list_invoice.php', {
+            id: id
+        }, function(res) {
             if (!res) return;
 
             $('#no_invoice').val(res.no_invoice);
@@ -210,7 +213,9 @@ if (isset($_POST['id']) && $_POST['id'] != '') {
             $('#tax_tipe').val(res.tax_tipe);
             $('#currency').val(res.currency);
 
-            $.post('/model/get_invoice_items.php', { id_invoice: id }, function (items) {
+            $.post('/model/get_invoice_items.php', {
+                id_invoice: id
+            }, function(items) {
                 $('#invoice_items').html('');
                 items.forEach(it => addItemRow(it));
                 hitungGrandTotal();
@@ -219,9 +224,11 @@ if (isset($_POST['id']) && $_POST['id'] != '') {
         }, 'json');
     }
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         loadMaterialDatalist();
-        $.post('/model/list_customer_supplier.php', { search: '' }, function (data) {
+        $.post('/model/list_customer_supplier.php', {
+            search: ''
+        }, function(data) {
             let opts = '<option value="">-- Pilih --</option>';
             data.forEach(d => {
                 opts += `<option value="${d.id}">${d.nama_customer_supplier} (${d.tipe})</option>`;
@@ -232,7 +239,7 @@ if (isset($_POST['id']) && $_POST['id'] != '') {
                 loadDataInvoice(<?= $id ?>);
             <?php } ?>
         }, 'json');
-        $.post('/model/list_currency.php', {}, function (data) {
+        $.post('/model/list_currency.php', {}, function(data) {
             let opts = '<option value="">-- Pilih --</option>';
             data.forEach(d => {
                 opts += `<option value="${d.currency}">${d.currency} - ${d.deskripsi}</option>`;
@@ -240,12 +247,12 @@ if (isset($_POST['id']) && $_POST['id'] != '') {
             $('#currency').html(opts);
         }, 'json');
     });
-    $('#save-invoice').click(function () {
+    $('#save-invoice').click(function() {
 
-        const id_cs  = $('#id_customer_supplier').val();
-        const tgl    = $('#tanggal_invoice').val();
-        const tax    = $('#tax_tipe').val();
-        const curr   = $('#currency').val();
+        const id_cs = $('#id_customer_supplier').val();
+        const tgl = $('#tanggal_invoice').val();
+        const tax = $('#tax_tipe').val();
+        const curr = $('#currency').val();
 
         if (!id_cs || !tgl || !tax || !curr) {
             alert('Harap lengkapi semua field header terlebih dahulu.');
@@ -253,15 +260,15 @@ if (isset($_POST['id']) && $_POST['id'] != '') {
         }
 
         let items = [];
-        $('#invoice_items tr').each(function () {
+        $('#invoice_items tr').each(function() {
             const matId = $(this).find('.inv-material-id').val();
             if (!matId) return;
             items.push({
-                id          : $(this).find('.inv-item-id').val(),
-                id_material : matId,
+                id: $(this).find('.inv-item-id').val(),
+                id_material: matId,
                 nama_material: $(this).find('.inv-nama-material').val(),
-                qty         : $(this).find('.inv-qty').val(),
-                total       : $(this).find('.inv-total').val()
+                qty: $(this).find('.inv-qty').val(),
+                total: $(this).find('.inv-total').val()
             });
         });
 
@@ -272,18 +279,20 @@ if (isset($_POST['id']) && $_POST['id'] != '') {
         let grandTotal = items.reduce((sum, it) => sum + parseFloat(it.total || 0), 0);
 
         $.post('/model/invoice.php', {
-            id                  : '<?= $id ?>',
-            status              : '<?= $status ?>',
+            id: '<?= $id ?>',
+            status: '<?= $status ?>',
             id_customer_supplier: id_cs,
-            tanggal_invoice     : tgl,
-            tax_tipe            : tax,
-            currency            : curr,
-            total               : grandTotal,
-            items               : JSON.stringify(items)
-        }, function (res) {
+            tanggal_invoice: tgl,
+            tax_tipe: tax,
+            currency: curr,
+            total: grandTotal,
+            items: JSON.stringify(items)
+        }, function(res) {
             if (res.status === 'success') {
                 $('#no_invoice').val(res.no_invoice);
                 alert('Invoice berhasil disimpan! No: ' + res.no_invoice);
+                loadInvoice()
+                $("#kembali-2").click()
             } else {
                 alert('Error: ' + res.message);
             }

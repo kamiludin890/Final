@@ -67,15 +67,8 @@ if (isset($_POST['id'])) {
             status: status
         }, function(data) {
             alert(data.message);
-            if (data.success) {
-                $("#nama-customer-supplier").val('');
-                $("#alamat").val('');
-                $("#email").val('');
-                $("#phone").val('');
-                $("#tlpn").val('');
-                $("#tax-number").val('');
-                loadData();
-            }
+            loadData();
+            $("#kembali-2").click()
         }, "json");
     });
     $(document).ready(function() {

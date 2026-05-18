@@ -87,9 +87,7 @@ $status = $id ? "UPDATE" : "INSERT";
 
         });
     }
-
     $("#submit-material").click(function() {
-
         $.post("model/material.php", {
             id: id,
             nama_material: $("#nama-material").val(),
@@ -99,15 +97,10 @@ $status = $id ? "UPDATE" : "INSERT";
             currency: $("#currency").val(),
             status: status
         }, function(res) {
-
             if (typeof res === "string") res = JSON.parse(res);
-
             alert(res.message);
-
-            if (res.success) {
-                $("#fourth-content").html("");
-                $("#third-content").show();
-            }
+            loadData();
+            $("#kembali-2").click()
 
         }, "json");
     });

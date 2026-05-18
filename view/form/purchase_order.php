@@ -17,7 +17,7 @@ if (isset($_POST['id']) && $_POST['id'] != '') {
     </div>
 
     <div class="col-8">
-        <label>Customer</label>
+        <label>Perusahaan</label>
         <select id="customer" class="form-control">
             <option value="">-- Pilih --</option>
         </select>
@@ -213,6 +213,8 @@ if (isset($_POST['id']) && $_POST['id'] != '') {
             if (res.status == "success") {
                 $("#no_po").val(res.no_po);
                 alert("Saved!");
+                loadData()
+                $("#kembali-2").click()
             }
 
         }, "json");
