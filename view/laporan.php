@@ -23,3 +23,13 @@
     </div>
 </div>
 <div id="third-content"></div>
+<script>
+    $("#laporan-keuangan").click(function() {
+        $("#second-content").hide();
+        $("#third-content").load("view/financial_report.php");
+    })
+    $("#laporan-stok").click(function() {
+        $("#second-content").hide();
+        $("#third-content").load("view/material_stock_report.php");
+    })
+</script>

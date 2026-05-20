@@ -1,7 +1,5 @@
 <div id="second-content">
     <div class="row">
-
-        <!-- Bar Chart -->
         <div class="col-md-6 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body" style="height: 90vh;">
@@ -10,8 +8,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Pie Chart -->
         <div class="col-md-6 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body" style="height: 90vh;">
@@ -20,8 +16,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Line Chart -->
         <div class="col-md-12">
             <div class="card shadow-sm">
                 <div class="card-body" style="height: 90vh;">
