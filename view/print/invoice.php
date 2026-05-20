@@ -15,8 +15,11 @@ if (file_exists($file)) {
 $id = (int)($_POST['id'] ?? 0);
 
 ob_start();
+
 $_POST['id'] = $id;
-include $_SERVER['DOCUMENT_ROOT'] . '/model/get_purchase_order.php';
+
+include $_SERVER['DOCUMENT_ROOT'] . '/model/get_invoice.php';
+
 $json = ob_get_clean();
 
 $data   = json_decode($json, true);
@@ -26,12 +29,18 @@ $items  = $data['items']  ?? [];
 if (isset($_POST['excel'])) {
 
     header("Content-Type: application/vnd.ms-excel");
-    header("Content-Disposition: attachment; filename=purchase_order_" . ($header['no_purchase_order'] ?? 'export') . ".xls");
+    header("Content-Disposition: attachment; filename=invoice_" . ($header['no_invoice'] ?? 'export') . ".xls");
     header("Pragma: no-cache");
     header("Expires: 0");
 
     $gt = 0;
     foreach ($items as $row) { $gt += (float)($row['total'] ?? 0); }
+    $tp     = $header['tax_tipe'] ?? '-';
+    $curr   = $header['currency'] ?? '';
+    $taxAmt = 0; $taxLbl = '';
+    $afterTax = $gt;
+    if (strtolower($tp) === 'ppn')    { $taxAmt = $gt * 0.11; $taxLbl = 'PPN 11%';    $afterTax = $gt + $taxAmt; }
+    if (strtolower($tp) === 'ppn_bm') { $taxAmt = $gt * 0.20; $taxLbl = 'PPnBM 20%'; $afterTax = $gt + $taxAmt; }
     ?>
     <html><head><meta charset="UTF-8"></head><body>
     <table border="0" cellpadding="4" cellspacing="0" style="font-family:Arial;font-size:12px;">
@@ -39,16 +48,24 @@ if (isset($_POST['excel'])) {
         <tr><td colspan="6" style="font-size:11px;color:#555;"><?= htmlspecialchars($address ?? '') ?> &nbsp;|&nbsp; <?= htmlspecialchars($email ?? '') ?> &nbsp;|&nbsp; NPWP: <?= htmlspecialchars($tax_number ?? '') ?></td></tr>
         <tr><td colspan="6">&nbsp;</td></tr>
         <tr>
-            <td colspan="3"><b>No Purchase Order</b></td>
-            <td colspan="3"><?= htmlspecialchars($header['no_purchase_order'] ?? '-') ?></td>
+            <td colspan="3"><b>No Invoice</b></td>
+            <td colspan="3"><?= htmlspecialchars($header['no_invoice'] ?? '-') ?></td>
         </tr>
         <tr>
-            <td colspan="3"><b>Tanggal</b></td>
-            <td colspan="3"><?= htmlspecialchars($header['tanggal_purchase_order'] ?? '-') ?></td>
+            <td colspan="3"><b>Tanggal Invoice</b></td>
+            <td colspan="3"><?= htmlspecialchars($header['tanggal_invoice'] ?? '-') ?></td>
         </tr>
         <tr>
             <td colspan="3"><b><?= ucfirst($header['tipe'] ?? 'Customer/Supplier') ?></b></td>
             <td colspan="3"><?= htmlspecialchars($header['nama_customer_supplier'] ?? '-') ?></td>
+        </tr>
+        <tr>
+            <td colspan="3"><b>Mata Uang</b></td>
+            <td colspan="3"><?= htmlspecialchars($curr) ?></td>
+        </tr>
+        <tr>
+            <td colspan="3"><b>Tipe Pajak</b></td>
+            <td colspan="3"><?= htmlspecialchars($tp) ?></td>
         </tr>
         <tr><td colspan="6">&nbsp;</td></tr>
         <tr style="background:#1a1a2e;color:#fff;">
@@ -56,22 +73,36 @@ if (isset($_POST['excel'])) {
             <th style="border:1px solid #000;padding:8px;">Kode Material</th>
             <th style="border:1px solid #000;padding:8px;">Nama Material</th>
             <th style="border:1px solid #000;padding:8px;text-align:center;">Qty</th>
-            <th style="border:1px solid #000;padding:8px;text-align:right;">Harga Satuan</th>
-            <th style="border:1px solid #000;padding:8px;text-align:right;">Total</th>
+            <th style="border:1px solid #000;padding:8px;text-align:right;">Harga Satuan (<?= htmlspecialchars($curr) ?>)</th>
+            <th style="border:1px solid #000;padding:8px;text-align:right;">Total (<?= htmlspecialchars($curr) ?>)</th>
         </tr>
-        <?php $no = 1; foreach ($items as $row): ?>
+        <?php $no = 1; foreach ($items as $row):
+            $qty   = (int)($row['qty'] ?? 0);
+            $tot   = (float)($row['total'] ?? 0);
+            $harga = $qty > 0 ? $tot / $qty : 0;
+        ?>
         <tr>
             <td style="border:1px solid #ccc;padding:6px;text-align:center;"><?= $no++ ?></td>
             <td style="border:1px solid #ccc;padding:6px;"><?= htmlspecialchars($row['kode_material'] ?? '-') ?></td>
             <td style="border:1px solid #ccc;padding:6px;"><?= htmlspecialchars($row['nama_material'] ?? '-') ?></td>
-            <td style="border:1px solid #ccc;padding:6px;text-align:center;"><?= number_format((int)($row['qty'] ?? 0)) ?></td>
-            <td style="border:1px solid #ccc;padding:6px;text-align:right;"><?= number_format((float)($row['price'] ?? 0), 2) ?></td>
-            <td style="border:1px solid #ccc;padding:6px;text-align:right;"><?= number_format((float)($row['total'] ?? 0), 2) ?></td>
+            <td style="border:1px solid #ccc;padding:6px;text-align:center;"><?= number_format($qty) ?></td>
+            <td style="border:1px solid #ccc;padding:6px;text-align:right;"><?= number_format($harga, 2) ?></td>
+            <td style="border:1px solid #ccc;padding:6px;text-align:right;"><?= number_format($tot, 2) ?></td>
         </tr>
         <?php endforeach; ?>
+        <tr>
+            <td colspan="5" style="border:1px solid #ccc;padding:6px;text-align:right;"><b>Sub Total</b></td>
+            <td style="border:1px solid #ccc;padding:6px;text-align:right;"><?= number_format($gt, 2) ?></td>
+        </tr>
+        <?php if ($taxAmt > 0): ?>
+        <tr>
+            <td colspan="5" style="border:1px solid #ccc;padding:6px;text-align:right;"><b><?= $taxLbl ?></b></td>
+            <td style="border:1px solid #ccc;padding:6px;text-align:right;"><?= number_format($taxAmt, 2) ?></td>
+        </tr>
+        <?php endif; ?>
         <tr style="background:#1a1a2e;color:#fff;">
-            <td colspan="5" style="border:1px solid #000;padding:8px;text-align:right;"><b>GRAND TOTAL</b></td>
-            <td style="border:1px solid #000;padding:8px;text-align:right;"><b><?= number_format($gt, 2) ?></b></td>
+            <td colspan="5" style="border:1px solid #000;padding:8px;text-align:right;"><b>GRAND TOTAL (<?= htmlspecialchars($curr) ?>)</b></td>
+            <td style="border:1px solid #000;padding:8px;text-align:right;"><b><?= number_format($afterTax, 2) ?></b></td>
         </tr>
         <tr><td colspan="6">&nbsp;</td></tr>
         <tr><td colspan="3">&nbsp;</td><td colspan="3" style="text-align:center;">Hormat Kami,<br><br><br><?= htmlspecialchars($company_name) ?></td></tr>
@@ -147,7 +178,7 @@ if (isset($_POST['excel'])) {
     .inv-title {
         font-size: 28px;
         font-weight: 900;
-        color: #1a6ec0;
+        color: #c0392b;
         letter-spacing: 3px;
         text-transform: uppercase;
     }
@@ -243,6 +274,16 @@ if (isset($_POST['excel'])) {
         border-color: #1a1a2e !important;
     }
 
+    .inv-footer-info {
+        margin-top: 0;
+        border-top: 2px solid #1a1a2e;
+    }
+
+    .inv-footer-info table td {
+        padding: 4px 6px;
+        font-size: 12px;
+    }
+
     .inv-sign {
         display: flex;
         justify-content: flex-end;
@@ -282,6 +323,22 @@ $grand_total = 0;
 foreach ($items as $item) {
     $grand_total += (float)($item['total'] ?? 0);
 }
+
+$tax_tipe = $header['tax_tipe'] ?? '-';
+$currency = $header['currency'] ?? '';
+$tax_amount    = 0;
+$tax_label     = '';
+$amount_after_tax = $grand_total;
+
+if (strtolower($tax_tipe) === 'ppn') {
+    $tax_amount       = $grand_total * 0.11;
+    $tax_label        = 'PPN 11%';
+    $amount_after_tax = $grand_total + $tax_amount;
+} elseif (strtolower($tax_tipe) === 'ppn_bm') {
+    $tax_amount       = $grand_total * 0.20;
+    $tax_label        = 'PPnBM 20%';
+    $amount_after_tax = $grand_total + $tax_amount;
+}
 ?>
 
 <div class="inv-wrapper">
@@ -295,8 +352,8 @@ foreach ($items as $item) {
             </div>
         </div>
         <div class="inv-title-block">
-            <div class="inv-title">Purchase Order</div>
-            <div class="inv-no"><?= htmlspecialchars($header['no_purchase_order'] ?? '-') ?></div>
+            <div class="inv-title">Invoice</div>
+            <div class="inv-no"><?= htmlspecialchars($header['no_invoice'] ?? '-') ?></div>
         </div>
     </div>
 
@@ -310,23 +367,30 @@ foreach ($items as $item) {
                 <?= htmlspecialchars($header['nama_customer_supplier'] ?? '-') ?>
             </div>
             <div class="inv-meta-sub">
-                <?= nl2br(htmlspecialchars($header['alamat'] ?? '')) ?>
-                <?php if (!empty($header['alamat'])): ?><br><?php endif; ?>
+                <?= nl2br(htmlspecialchars($header['alamat'] ?? '')) ?><br>
                 <?php if (!empty($header['phone'])): ?>
                     Tel: <?= htmlspecialchars($header['phone']) ?><br>
                 <?php endif; ?>
-                <?php if (!empty($header['email'])): ?>
-                    <?= htmlspecialchars($header['email']) ?>
+                <?php if (!empty($header['email_cs'])): ?>
+                    <?= htmlspecialchars($header['email_cs']) ?>
                 <?php endif; ?>
             </div>
         </div>
 
         <div class="inv-meta-box" style="text-align:right;">
             <div>
-                <div class="inv-meta-label">Tanggal PO</div>
+                <div class="inv-meta-label">Tanggal Invoice</div>
                 <div class="inv-meta-value">
-                    <?= htmlspecialchars($header['tanggal_purchase_order'] ?? '-') ?>
+                    <?= htmlspecialchars($header['tanggal_invoice'] ?? '-') ?>
                 </div>
+            </div>
+            <div style="margin-top:10px;">
+                <div class="inv-meta-label">Mata Uang</div>
+                <div class="inv-meta-value"><?= htmlspecialchars($currency) ?></div>
+            </div>
+            <div style="margin-top:10px;">
+                <div class="inv-meta-label">Tipe Pajak</div>
+                <div class="inv-meta-value"><?= htmlspecialchars($tax_tipe) ?></div>
             </div>
         </div>
 
@@ -339,35 +403,51 @@ foreach ($items as $item) {
                 <th style="width:110px;">Kode Material</th>
                 <th>Nama Material</th>
                 <th class="text-center" style="width:70px;">Qty</th>
-                <th class="text-right" style="width:140px;">Harga Satuan</th>
-                <th class="text-right" style="width:140px;">Total</th>
+                <th class="text-right" style="width:140px;">
+                    Harga Satuan (<?= htmlspecialchars($currency) ?>)
+                </th>
+                <th class="text-right" style="width:140px;">
+                    Total (<?= htmlspecialchars($currency) ?>)
+                </th>
             </tr>
         </thead>
         <tbody>
             <?php
             $no = 1;
             foreach ($items as $item):
-                $qty   = (int)($item['qty'] ?? 0);
-                $price = (float)($item['price'] ?? 0);
-                $total = (float)($item['total'] ?? 0);
+                $qty         = (int)($item['qty'] ?? 0);
+                $total_item  = (float)($item['total'] ?? 0);
+                $harga_satuan = ($qty > 0) ? $total_item / $qty : 0;
             ?>
             <tr>
                 <td class="text-center"><?= $no++ ?></td>
                 <td><?= htmlspecialchars($item['kode_material'] ?? '-') ?></td>
                 <td><?= htmlspecialchars($item['nama_material'] ?? '-') ?></td>
                 <td class="text-center"><?= number_format($qty) ?></td>
-                <td class="text-right"><?= number_format($price, 2) ?></td>
-                <td class="text-right"><?= number_format($total, 2) ?></td>
+                <td class="text-right"><?= number_format($harga_satuan, 2) ?></td>
+                <td class="text-right"><?= number_format($total_item, 2) ?></td>
             </tr>
             <?php endforeach; ?>
         </tbody>
         <tfoot>
+            <tr>
+                <td colspan="5" class="text-right">Sub Total</td>
+                <td class="text-right"><?= number_format($grand_total, 2) ?></td>
+            </tr>
+
+            <?php if ($tax_amount > 0): ?>
+            <tr>
+                <td colspan="5" class="text-right"><?= $tax_label ?></td>
+                <td class="text-right"><?= number_format($tax_amount, 2) ?></td>
+            </tr>
+            <?php endif; ?>
+
             <tr class="grand-total-row">
                 <td colspan="5" class="text-right">
-                    <strong>GRAND TOTAL</strong>
+                    <strong>GRAND TOTAL (<?= htmlspecialchars($currency) ?>)</strong>
                 </td>
                 <td class="text-right">
-                    <strong><?= number_format($grand_total, 2) ?></strong>
+                    <strong><?= number_format($amount_after_tax, 2) ?></strong>
                 </td>
             </tr>
         </tfoot>
@@ -390,7 +470,7 @@ foreach ($items as $item) {
     function exportExcel() {
         let form = $('<form>', {
             method: 'POST',
-            action: '/view/print/purchase_order.php'
+            action: '/view/print/invoice.php'
         });
 
         form.append($('<input>', { type: 'hidden', name: 'id',    value: '<?= $id ?>' }));
@@ -402,12 +482,12 @@ foreach ($items as $item) {
     }
 
     function printData() {
-        window.open('', 'poPopup', 'width=1050,height=750,left=80,top=40');
+        window.open('', 'invPopup', 'width=1050,height=750,left=80,top=40');
 
         let form = $('<form>', {
             method: 'POST',
-            action: '/view/print/purchase_order.php',
-            target: 'poPopup'
+            action: '/view/print/invoice.php',
+            target: 'invPopup'
         });
 
         form.append($('<input>', { type: 'hidden', name: 'id',    value: '<?= $id ?>' }));

@@ -26,7 +26,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
     function loadInvoice(search = '') {
         $.post('/model/list_invoice.php', {
             search: search
-        }, function (res) {
+        }, function(res) {
 
             let html = '';
 
@@ -59,6 +59,9 @@ include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
                             <button class="btn btn-sm btn-danger delete-invoice" data-id="${d.id}">
                                 Hapus
                             </button>
+                            <button class="btn btn-sm btn-warning view-invoice" data-id="${d.id}">
+                                View
+                            </button>
                         </td>
                     </tr>`;
                 });
@@ -74,39 +77,51 @@ include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
 
         let searchTimer;
 
-        $('#search').off('input').on('input', function () {
+        $('#search').off('input').on('input', function() {
             clearTimeout(searchTimer);
 
             const keyword = $(this).val();
 
-            searchTimer = setTimeout(function () {
+            searchTimer = setTimeout(function() {
                 loadInvoice(keyword);
             }, 400);
         });
     }
     initInvoicePage();
 
-    $('#add-invoice').off('click').on('click', function () {
+    $('#add-invoice').off('click').on('click', function() {
         $("#third-content").hide();
         $("#fourth-content").load("view/form/invoice.php");
     });
-    $(document).on('click', '.edit-invoice', function () {
+    $(document).on('click', '.edit-invoice', function() {
         const id = $(this).data('id');
 
-        $.post('view/form/invoice.php', { id: id }, function (data) {
+        $.post('view/form/invoice.php', {
+            id: id
+        }, function(data) {
             $("#third-content").hide();
             $("#fourth-content").html(data);
         });
     });
 
-    $(document).on('click', '.delete-invoice', function () {
+    $(document).on('click', '.view-invoice', function() {
+        const id = $(this).data('id');
+
+        $.post('view/print/invoice.php', {
+            id: id
+        }, function(data) {
+            $("#third-content").hide();
+            $("#fourth-content").html(data);
+        });
+    });
+    $(document).on('click', '.delete-invoice', function() {
         const id = $(this).data('id');
 
         if (confirm('Yakin ingin menghapus invoice ini?')) {
             $.post('/model/invoice.php', {
                 id: id,
                 status: 'DELETE'
-            }, function (res) {
+            }, function(res) {
                 if (res.status === 'success') {
                     loadInvoice($('#search').val());
                 } else {
@@ -115,5 +130,4 @@ include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
             }, 'json');
         }
     });
-
 </script>
