@@ -1,3 +1,6 @@
+<?php
+$user = $_SESSION['user']['nama'];
+?>
 <div id="wrapper">
 
     <div id="sidebar" class="bg-primary text-white p-3">
@@ -46,7 +49,7 @@
                 <button class="btn btn-primary" id="toggleSidebar"><i class="bi bi-x-lg"></i>
                 </button>
 
-                <label class="navbar-brand ms-2"><img src="" alt=""><i class="bi bi-person-fill"></i> User</label>
+                <label class="navbar-brand ms-2"><img src="" alt=""><i class="bi bi-person-fill"></i> <?= $user ?></label>
 
             </div>
         </nav>

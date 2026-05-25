@@ -8,7 +8,6 @@ $compEmail = isset($email) ? $email : 'info@company.com';
 ?>
 
 <div class="material-stock-report-container fade-in-up mt-3">
-    <!-- ===== PRINT HEADER (ONLY VISIBLE ON PRINT) ===== -->
     <div class="print-header d-none">
         <div class="row align-items-center mb-4">
             <div class="col-8">
@@ -23,8 +22,6 @@ $compEmail = isset($email) ? $email : 'info@company.com';
         </div>
         <hr class="border-2 border-dark opacity-100 mb-4">
     </div>
-
-    <!-- ===== SCREEN HEADER ===== -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3 no-print">
         <div>
             <h4 class="fw-bold text-dark-blue mb-1">Laporan Mutasi Stok Material</h4>
@@ -36,8 +33,6 @@ $compEmail = isset($email) ? $email : 'info@company.com';
             </button>
         </div>
     </div>
-
-    <!-- ===== FILTER PANEL ===== -->
     <div class="card border-0 shadow-sm mb-4 no-print filter-card">
         <div class="card-body p-3">
             <div class="row align-items-end g-3">
@@ -72,8 +67,6 @@ $compEmail = isset($email) ? $email : 'info@company.com';
             </div>
         </div>
     </div>
-
-    <!-- ===== SUMMARY SUMMARY CARDS ===== -->
     <div class="row mb-4 g-3">
         <div class="col-md-6">
             <div class="card border-0 shadow-sm bg-success text-white p-3 h-100 position-relative overflow-hidden">
@@ -102,8 +95,6 @@ $compEmail = isset($email) ? $email : 'info@company.com';
             </div>
         </div>
     </div>
-
-    <!-- ===== STOCK LEDGER TABLE ===== -->
     <div class="card border-0 shadow-sm report-table-card">
         <div class="card-body p-4">
             <h6 class="fw-bold text-dark-blue mb-3 no-print">Laporan Saldo & Mutasi Stok</h6>
@@ -140,12 +131,15 @@ $compEmail = isset($email) ? $email : 'info@company.com';
     .text-dark-blue {
         color: #1e293b;
     }
+
     .filter-card {
         border-radius: 12px;
     }
+
     .report-table-card {
         border-radius: 16px;
     }
+
     .z-index-1 {
         z-index: 1;
     }
@@ -157,90 +151,117 @@ $compEmail = isset($email) ? $email : 'info@company.com';
             color: #000 !important;
             font-size: 11pt !important;
         }
-        .no-print, #sidebar, #toggleSidebar, .navbar, .btn-kembali, #kembali-2 {
+
+        .no-print,
+        #sidebar,
+        #toggleSidebar,
+        .navbar,
+        .btn-kembali,
+        #kembali {
             display: none !important;
         }
-        #wrapper, #content, #main-content {
+
+        #wrapper,
+        #content,
+        #main-content {
             padding: 0 !important;
             margin: 0 !important;
             width: 100% !important;
         }
+
         .print-header {
             display: block !important;
         }
+
         .card {
             border: 0 !important;
             box-shadow: none !important;
             padding: 0 !important;
             margin-bottom: 0 !important;
         }
+
         .card-body {
             padding: 0 !important;
         }
-        .bg-success, .bg-primary {
+
+        .bg-success,
+        .bg-primary {
             background-color: #fff !important;
             color: #000 !important;
             border: 2px solid #000 !important;
             margin-bottom: 20px !important;
         }
+
         .text-white-50 {
             color: #555 !important;
         }
-        .bg-success h3, .bg-primary h3 {
+
+        .bg-success h3,
+        .bg-primary h3 {
             color: #000 !important;
         }
+
         .icon-circle {
             display: none !important;
         }
+
         .table-responsive {
             overflow: visible !important;
         }
+
         table {
             width: 100% !important;
             border-collapse: collapse !important;
             page-break-inside: auto !important;
         }
+
         tr {
             page-break-inside: avoid !important;
             page-break-after: auto !important;
         }
+
         thead {
             display: table-header-group !important;
         }
+
         .table-dark {
             background-color: #e2e8f0 !important;
             color: #000 !important;
         }
+
         .table-dark th {
             color: #000 !important;
             border: 1px solid #000 !important;
             background-color: #e2e8f0 !important;
         }
+
         td {
             border: 1px solid #ccc !important;
         }
+
         .text-success {
             color: #000 !important;
             font-weight: bold;
         }
+
         .text-danger {
             color: #000 !important;
             font-weight: bold;
         }
     }
 </style>
-
-<!-- ===== JAVASCRIPT LOGIC ===== -->
 <script>
     $(document).ready(function() {
-        // Format Indonesian Date
         function formatDateIndo(dateStr) {
             if (!dateStr) return '-';
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const options = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
             return new Date(dateStr).toLocaleDateString('id-ID', options);
         }
 
-        // Format Currency Helper
         function formatValCurrency(val, currency) {
             return currency + ' ' + parseFloat(val || 0).toLocaleString('id-ID', {
                 minimumFractionDigits: 2,
@@ -248,29 +269,25 @@ $compEmail = isset($email) ? $email : 'info@company.com';
             });
         }
 
-        // Load Tipe Material dynamically to populate filter
         function loadTipeMaterialOptions() {
             $.post('/model/list_tipe_material.php', function(data) {
                 if (typeof data === 'string') {
                     data = JSON.parse(data);
                 }
-                
+
                 let html = '<option value="">-- Semua Tipe --</option>';
                 data.forEach(t => {
                     html += `<option value="${t.id}">${t.nama_tipe_material}</option>`;
                 });
-                
+
                 $("#filter-tipe-material").html(html);
             });
         }
 
-        // Load Material Stock Report Data
         function loadStockReport() {
             const start = $("#filter-stock-mulai").val();
             const end = $("#filter-stock-selesai").val();
             const tipeId = $("#filter-tipe-material").val();
-
-            // Set period in print preview
             const periodStr = formatDateIndo(start) + ' - ' + formatDateIndo(end);
             $(".print-periode").text(periodStr);
 
@@ -280,10 +297,9 @@ $compEmail = isset($email) ? $email : 'info@company.com';
                 id_tipe_material: tipeId
             }, function(res) {
                 if (res.status === 'success') {
-                    // Update Summary cards
                     $("#card-total-items").text(res.summary.total_items + ' Material');
                     $("#card-total-asset-valuation").text(formatValCurrency(res.summary.total_asset_valuation_idr, 'IDR'));
-                    
+
                     renderStockTable(res.data);
                 } else {
                     alert('Gagal mengambil data laporan: ' + res.message);
@@ -291,7 +307,6 @@ $compEmail = isset($email) ? $email : 'info@company.com';
             }, 'json');
         }
 
-        // Render rows of the stock ledger table
         function renderStockTable(items) {
             let html = '';
 
@@ -306,7 +321,7 @@ $compEmail = isset($email) ? $email : 'info@company.com';
             } else {
                 items.forEach((it, i) => {
                     const assetValStr = formatValCurrency(it.asset_value, it.currency);
-                    
+
                     html += `
                         <tr>
                             <td class="text-center font-sans font-normal" style="font-family: inherit;">${i + 1}</td>
@@ -334,17 +349,11 @@ $compEmail = isset($email) ? $email : 'info@company.com';
 
             $("#stock-report-body").html(html);
         }
-
-        // Initialize view components
         loadTipeMaterialOptions();
         loadStockReport();
-
-        // Bind filter event
         $("#btn-filter-stock").click(function() {
             loadStockReport();
         });
-
-        // Bind print event
         $("#btn-print-stock-report").click(function() {
             window.print();
         });

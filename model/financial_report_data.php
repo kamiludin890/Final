@@ -6,16 +6,12 @@ header('Content-Type: application/json');
 try {
     $tanggal_mulai = $_POST['tanggal_mulai'] ?? '';
     $tanggal_selesai = $_POST['tanggal_selesai'] ?? '';
-
-    // Default to current month if dates are empty
     if (empty($tanggal_mulai)) {
         $tanggal_mulai = date('Y-m-01');
     }
     if (empty($tanggal_selesai)) {
         $tanggal_selesai = date('Y-m-t');
     }
-
-    // 1. Fetch Transactions within Date Range
     $query = "
         SELECT 
             inv.id,
@@ -37,7 +33,7 @@ try {
     if (!$stmt) {
         throw new Exception("Query preparation failed: " . $conn->error);
     }
-    
+
     $stmt->bind_param("ss", $tanggal_mulai, $tanggal_selesai);
     if (!$stmt->execute()) {
         throw new Exception("Query execution failed: " . $stmt->error);
@@ -52,11 +48,9 @@ try {
         if (empty($curr)) {
             $curr = 'IDR';
         }
-        
-        $total = (float)$row['total'];
-        $type = $row['cs_tipe']; // 'customer' or 'supplier'
 
-        // Initialize currency summary if not exists
+        $total = (float)$row['total'];
+        $type = $row['cs_tipe'];
         if (!isset($summary[$curr])) {
             $summary[$curr] = [
                 'revenue' => 0.0,
@@ -64,8 +58,6 @@ try {
                 'net_profit' => 0.0
             ];
         }
-
-        // Accrue totals based on Customer/Supplier type
         if ($type === 'customer') {
             $summary[$curr]['revenue'] += $total;
             $row['transaction_type'] = 'Penjualan';
@@ -76,8 +68,6 @@ try {
 
         $transactions[] = $row;
     }
-
-    // Calculate Net Profit for each currency
     foreach ($summary as $curr => &$values) {
         $values['net_profit'] = $values['revenue'] - $values['expense'];
     }
@@ -91,7 +81,6 @@ try {
         "summary" => $summary,
         "transactions" => $transactions
     ]);
-
 } catch (Exception $e) {
     echo json_encode([
         "status" => "error",

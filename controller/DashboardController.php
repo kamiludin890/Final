@@ -3,12 +3,13 @@ include $_SERVER['DOCUMENT_ROOT'] . '/database/koneksi.php';
 
 header('Content-Type: application/json');
 
-function convertToIDR($amount, $currency, $conn) {
+function convertToIDR($amount, $currency, $conn)
+{
     $currency = strtoupper(trim($currency));
     if ($currency === 'IDR' || $currency === '') {
         return $amount;
     }
-    
+
     $stmt = $conn->prepare("SELECT rate FROM currency_rate WHERE UPPER(currency) = ? ORDER BY tanggal DESC LIMIT 1");
     if ($stmt) {
         $stmt->bind_param("s", $currency);
@@ -19,28 +20,23 @@ function convertToIDR($amount, $currency, $conn) {
             }
         }
     }
-    
+
     $fallbacks = [
         'USD' => 16000.0,
         'SGD' => 11800.0,
         'EUR' => 17200.0,
         'JPY' => 102.0,
     ];
-    
+
     $rate = $fallbacks[$currency] ?? 1.0;
     return $amount * $rate;
 }
 
 try {
-    // 1. Total Active Materials
     $resMaterial = $conn->query("SELECT COUNT(*) AS total FROM material WHERE status = 1");
     $totalMaterials = $resMaterial ? (int)$resMaterial->fetch_assoc()['total'] : 0;
-
-    // 2. Total Invoices
     $resInvoices = $conn->query("SELECT COUNT(*) AS total FROM invoice WHERE status = 1");
     $totalInvoices = $resInvoices ? (int)$resInvoices->fetch_assoc()['total'] : 0;
-
-    // 3. Total Revenue (Sales) grouped by currency
     $resRevenue = $conn->query("
         SELECT inv.currency, SUM(inv.total) AS total_val
         FROM invoice inv
@@ -59,8 +55,6 @@ try {
         }
     }
     $revenueStr = !empty($revenueList) ? implode(' | ', $revenueList) : 'IDR 0,00';
-
-    // 4. Total Expense (Purchases) grouped by currency
     $resExpense = $conn->query("
         SELECT inv.currency, SUM(inv.total) AS total_val
         FROM invoice inv
@@ -79,8 +73,6 @@ try {
         }
     }
     $expenseStr = !empty($expenseList) ? implode(' | ', $expenseList) : 'IDR 0,00';
-
-    // 5. Monthly Sales & Purchases (Current Year) converted to IDR for comparison
     $salesMonthly = array_fill(1, 12, 0);
     $purchasesMonthly = array_fill(1, 12, 0);
 
@@ -113,8 +105,6 @@ try {
             $purchasesMonthly[$bln] += convertToIDR($val, $curr, $conn);
         }
     }
-
-    // 6. Category breakdown of sales (by material type name)
     $resCategory = $conn->query("
         SELECT tm.nama_tipe_material, SUM(ii.qty) AS total_qty
         FROM invoice_item ii
@@ -127,7 +117,7 @@ try {
         ORDER BY total_qty DESC
         LIMIT 5
     ");
-    
+
     $kategori = [];
     $kategoriJumlah = [];
     if ($resCategory) {
@@ -136,8 +126,6 @@ try {
             $kategoriJumlah[] = (int)$row['total_qty'];
         }
     }
-
-    // Fallback if no categories sold yet
     if (empty($kategori)) {
         $kategori = ["Belum Ada Penjualan"];
         $kategoriJumlah = [0];
@@ -158,11 +146,9 @@ try {
     ];
 
     echo json_encode($data);
-
 } catch (Exception $e) {
     echo json_encode([
         "error" => true,
         "message" => $e->getMessage()
     ]);
 }
-

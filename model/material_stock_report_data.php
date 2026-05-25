@@ -8,7 +8,6 @@ try {
     $tanggal_selesai = $_POST['tanggal_selesai'] ?? '';
     $id_tipe_material = $_POST['id_tipe_material'] ?? '';
 
-    // Default to current month if dates are empty
     if (empty($tanggal_mulai)) {
         $tanggal_mulai = date('Y-m-01');
     }
@@ -16,7 +15,6 @@ try {
         $tanggal_selesai = date('Y-m-t');
     }
 
-    // Base query utilizing the brilliant mutasi stok logic
     $query = "
         SELECT 
             m.id,
@@ -61,7 +59,6 @@ try {
         WHERE m.status = 1
     ";
 
-    // Append filter for material type if supplied
     if (!empty($id_tipe_material)) {
         $query .= " AND m.tipe_material = ? ";
     }
@@ -73,20 +70,25 @@ try {
         throw new Exception("Query preparation failed: " . $conn->error);
     }
 
-    // Bind parameters conditionally
     if (!empty($id_tipe_material)) {
         $id_tipe_material = (int)$id_tipe_material;
-        $stmt->bind_param("ssssssi", 
-            $tanggal_mulai, 
-            $tanggal_mulai, $tanggal_selesai, 
-            $tanggal_mulai, $tanggal_selesai, 
+        $stmt->bind_param(
+            "sssssi",
+            $tanggal_mulai,
+            $tanggal_mulai,
+            $tanggal_selesai,
+            $tanggal_mulai,
+            $tanggal_selesai,
             $id_tipe_material
         );
     } else {
-        $stmt->bind_param("sssss", 
-            $tanggal_mulai, 
-            $tanggal_mulai, $tanggal_selesai, 
-            $tanggal_mulai, $tanggal_selesai
+        $stmt->bind_param(
+            "sssss",
+            $tanggal_mulai,
+            $tanggal_mulai,
+            $tanggal_selesai,
+            $tanggal_mulai,
+            $tanggal_selesai
         );
     }
 
@@ -100,7 +102,7 @@ try {
     // Summary aggregates
     $totalAssetValuationIDR = 0;
     $totalUniqueMaterials = 0;
-    
+
     // Fallback convert helper to calculate total asset valuation in IDR
     $fallbacks = [
         'USD' => 16000.0,
@@ -115,10 +117,10 @@ try {
         $qty_masuk = (int)$row['qty_masuk'];
         $qty_keluar = (int)$row['qty_keluar'];
         $stok_akhir = $stok_awal + $qty_masuk - $qty_keluar;
-        
+
         $harga = (float)$row['harga'];
         $asset_value = $stok_akhir * $harga;
-        
+
         $row['stok_awal'] = $stok_awal;
         $row['qty_masuk'] = $qty_masuk;
         $row['qty_keluar'] = $qty_keluar;
@@ -129,7 +131,7 @@ try {
         $curr = strtoupper(trim($row['currency']));
         if (empty($curr)) $curr = 'IDR';
         $rate = $fallbacks[$curr] ?? 1.0;
-        
+
         // Also look up latest currency_rate from DB
         $stmtRate = $conn->prepare("SELECT rate FROM currency_rate WHERE UPPER(currency) = ? ORDER BY tanggal DESC LIMIT 1");
         if ($stmtRate) {
@@ -141,7 +143,7 @@ try {
                 }
             }
         }
-        
+
         $totalAssetValuationIDR += ($asset_value * $rate);
         $totalUniqueMaterials++;
 
@@ -161,7 +163,6 @@ try {
         ],
         "data" => $reportData
     ]);
-
 } catch (Exception $e) {
     echo json_encode([
         "status" => "error",

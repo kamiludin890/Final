@@ -100,37 +100,46 @@ $compEmail = isset($email) ? $email : 'info@company.com';
     .text-dark-blue {
         color: #1e293b;
     }
+
     .filter-card {
         border-radius: 12px;
     }
+
     .report-table-card {
         border-radius: 16px;
     }
+
     .badge-cash-in {
         background-color: rgba(16, 185, 129, 0.1) !important;
         color: #10b981 !important;
         border: 1px solid rgba(16, 185, 129, 0.2);
     }
+
     .badge-cash-out {
         background-color: rgba(239, 68, 68, 0.1) !important;
         color: #ef4444 !important;
         border: 1px solid rgba(239, 68, 68, 0.2);
     }
+
     .text-profit-plus {
         color: #10b981;
     }
+
     .text-profit-minus {
         color: #ef4444;
     }
+
     .summary-group-box {
         background-color: #f8fafc;
         border-radius: 16px;
         border: 1px solid #e2e8f0;
     }
+
     .metric-subcard {
         border-radius: 12px;
         transition: transform 0.2s ease;
     }
+
     .metric-subcard:hover {
         transform: scale(1.01);
     }
@@ -142,50 +151,69 @@ $compEmail = isset($email) ? $email : 'info@company.com';
             color: #000 !important;
             font-size: 11pt !important;
         }
-        .no-print, #sidebar, #toggleSidebar, .navbar, .btn-kembali, #kembali-2 {
+
+        .no-print,
+        #sidebar,
+        #toggleSidebar,
+        .navbar,
+        .btn-kembali,
+        #kembali {
             display: none !important;
         }
-        #wrapper, #content, #main-content {
+
+        #wrapper,
+        #content,
+        #main-content {
             padding: 0 !important;
             margin: 0 !important;
             width: 100% !important;
         }
+
         .print-header {
             display: block !important;
         }
+
         .card {
             border: 0 !important;
             box-shadow: none !important;
             padding: 0 !important;
             margin-bottom: 0 !important;
         }
+
         .card-body {
             padding: 0 !important;
         }
+
         .table-responsive {
             overflow: visible !important;
         }
+
         table {
             width: 100% !important;
             border-collapse: collapse !important;
             page-break-inside: auto !important;
         }
+
         tr {
             page-break-inside: avoid !important;
             page-break-after: auto !important;
         }
+
         thead {
             display: table-header-group !important;
         }
+
         .table-dark {
             background-color: #e2e8f0 !important;
             color: #000 !important;
         }
+
         .table-dark th {
             color: #000 !important;
             border-bottom: 2px solid #000 !important;
             background-color: #e2e8f0 !important;
         }
+
         .badge {
             background: none !important;
             color: #000 !important;
@@ -193,12 +221,14 @@ $compEmail = isset($email) ? $email : 'info@company.com';
             padding: 0 !important;
             font-weight: bold;
         }
+
         .summary-group-box {
             border: 2px solid #000 !important;
             background-color: #fff !important;
             margin-bottom: 30px !important;
             page-break-inside: avoid !important;
         }
+
         .metric-subcard {
             border: 1px solid #ccc !important;
             background-color: #fff !important;
@@ -212,7 +242,11 @@ $compEmail = isset($email) ? $email : 'info@company.com';
         // Format Indonesian Date
         function formatDateIndo(dateStr) {
             if (!dateStr) return '-';
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const options = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
             return new Date(dateStr).toLocaleDateString('id-ID', options);
         }
 
@@ -269,7 +303,7 @@ $compEmail = isset($email) ? $email : 'info@company.com';
 
                     const profitClass = net >= 0 ? 'text-profit-plus' : 'text-profit-minus';
                     const profitIcon = net >= 0 ? 'bi-arrow-up-right-circle-fill' : 'bi-arrow-down-right-circle-fill';
-                    
+
                     html += `
                         <div class="summary-group-box p-4 mb-4">
                             <div class="d-flex align-items-center mb-3">

@@ -1,7 +1,5 @@
 <div id="second-content" class="fade-in-up">
-    <!-- ===== METRIC CARDS OVERVIEW ===== -->
     <div class="row mb-4">
-        <!-- Total Material Card -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-0 shadow-sm dashboard-card h-100 card-gradient-blue">
                 <div class="card-body p-4">
@@ -20,8 +18,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Total Invoices Card -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-0 shadow-sm dashboard-card h-100 card-gradient-purple">
                 <div class="card-body p-4">
@@ -40,8 +36,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Total Penjualan (Revenue) Card -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-0 shadow-sm dashboard-card h-100 card-gradient-green">
                 <div class="card-body p-4">
@@ -60,8 +54,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Total Pembelian (Expense) Card -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-0 shadow-sm dashboard-card h-100 card-gradient-orange">
                 <div class="card-body p-4">
@@ -81,10 +73,7 @@
             </div>
         </div>
     </div>
-
-    <!-- ===== CHARTS SECTION ===== -->
     <div class="row">
-        <!-- Sales & Purchase Comparison Bar Chart -->
         <div class="col-xl-7 col-lg-6 mb-4">
             <div class="card border-0 shadow-sm card-chart h-100">
                 <div class="card-body p-4">
@@ -98,8 +87,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Sales Category Breakdown Pie/Doughnut Chart -->
         <div class="col-xl-5 col-lg-6 mb-4">
             <div class="card border-0 shadow-sm card-chart h-100">
                 <div class="card-body p-4">
@@ -113,8 +100,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Combined Revenue Trend Line Chart -->
         <div class="col-12 mb-4">
             <div class="card border-0 shadow-sm card-chart">
                 <div class="card-body p-4">
@@ -131,20 +116,21 @@
     </div>
 </div>
 <div id="third-content"></div>
-
-<!-- ===== CUSTOM PREMIUM STYLING ===== -->
 <style>
     .text-dark-blue {
         color: #1e293b;
         font-size: 1.1rem;
         letter-spacing: -0.01em;
     }
+
     .tracking-wider {
         letter-spacing: 0.05em;
     }
+
     .bg-white-20 {
         background-color: rgba(255, 255, 255, 0.2);
     }
+
     .icon-circle {
         width: 48px;
         height: 48px;
@@ -154,53 +140,64 @@
         justify-content: center;
         transition: transform 0.3s ease;
     }
+
     .dashboard-card {
         border-radius: 16px;
         overflow: hidden;
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
     }
+
     .dashboard-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.15) !important;
     }
+
     .dashboard-card:hover .icon-circle {
         transform: scale(1.1) rotate(5deg);
     }
+
     .card-chart {
         border-radius: 16px;
         transition: box-shadow 0.3s ease;
     }
+
     .card-chart:hover {
-        box-shadow: 0 8px 30px rgba(0,0,0,0.04) !important;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04) !important;
     }
+
     .truncate-card-text {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         max-width: 100%;
     }
-    /* Dynamic Gradients */
+
     .card-gradient-blue {
         background: linear-gradient(135deg, #2563eb, #3b82f6);
     }
+
     .card-gradient-purple {
         background: linear-gradient(135deg, #7c3aed, #a78bfa);
     }
+
     .card-gradient-green {
         background: linear-gradient(135deg, #059669, #10b981);
     }
+
     .card-gradient-orange {
         background: linear-gradient(135deg, #d97706, #f59e0b);
     }
-    /* Custom CSS animations */
+
     .fade-in-up {
         animation: fadeInUp 0.5s ease-out forwards;
     }
+
     @keyframes fadeInUp {
         from {
             opacity: 0;
             transform: translateY(15px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
@@ -216,14 +213,10 @@
             if (typeof res === 'string') {
                 data = JSON.parse(res);
             }
-
-            // Bind real metrics
             $("#card-total-materials").text(data.total_materials ?? 0);
             $("#card-total-invoices").text(data.total_invoices ?? 0);
             $("#card-total-revenue").text(data.total_revenue ?? 'IDR 0,00');
             $("#card-total-expense").text(data.total_expense ?? 'IDR 0,00');
-
-            // Format numbers to Indonesian Currency
             const formatCurrency = (val) => {
                 return parseFloat(val || 0).toLocaleString('id-ID', {
                     style: 'currency',
@@ -232,21 +225,16 @@
                     maximumFractionDigits: 0
                 });
             };
-
-            // Destructure/Fallbacks for charts
             const months = data.bulan;
             const sales = data.penjualan_bulanan ?? [];
             const purchases = data.pembelian_bulanan ?? [];
             const categories = data.kategori ?? [];
             const categoryCounts = data.kategori_jumlah ?? [];
-
-            // 1. Sales & Purchase Comparison Bar Chart
             new Chart(document.getElementById("barChart"), {
                 type: "bar",
                 data: {
                     labels: months,
-                    datasets: [
-                        {
+                    datasets: [{
                             label: "Penjualan (IDR)",
                             data: sales,
                             backgroundColor: "rgba(16, 185, 129, 0.85)", // Modern Emerald
@@ -277,7 +265,11 @@
                             labels: {
                                 boxWidth: 12,
                                 usePointStyle: true,
-                                font: { family: "'Inter', sans-serif", size: 12, weight: 500 }
+                                font: {
+                                    family: "'Inter', sans-serif",
+                                    size: 12,
+                                    weight: 500
+                                }
                             }
                         },
                         tooltip: {
@@ -292,20 +284,29 @@
                     },
                     scales: {
                         y: {
-                            grid: { borderDash: [5, 5], color: "#e2e8f0" },
+                            grid: {
+                                borderDash: [5, 5],
+                                color: "#e2e8f0"
+                            },
                             ticks: {
-                                font: { family: "'Inter', sans-serif", size: 10 },
-                                callback: function(value) { return 'Rp' + (value / 1e6) + 'jt'; }
+                                font: {
+                                    family: "'Inter', sans-serif",
+                                    size: 10
+                                },
+                                callback: function(value) {
+                                    return 'Rp' + (value / 1e6) + 'jt';
+                                }
                             }
                         },
                         x: {
-                            grid: { display: false }
+                            grid: {
+                                display: false
+                            }
                         }
                     }
                 }
             });
-
-            // 2. Sales Category Breakdown Pie/Doughnut Chart
+            t
             new Chart(document.getElementById("pieChart"), {
                 type: "doughnut",
                 data: {
@@ -313,11 +314,11 @@
                     datasets: [{
                         data: categoryCounts,
                         backgroundColor: [
-                            "#3b82f6", // Blue
-                            "#10b981", // Emerald
-                            "#f59e0b", // Amber
-                            "#ec4899", // Pink
-                            "#8b5cf6"  // Violet
+                            "#3b82f6",
+                            "#10b981",
+                            "#f59e0b",
+                            "#ec4899",
+                            "#8b5cf6"
                         ],
                         borderWidth: 2,
                         hoverOffset: 8
@@ -333,7 +334,10 @@
                             labels: {
                                 boxWidth: 10,
                                 usePointStyle: true,
-                                font: { family: "'Inter', sans-serif", size: 11 }
+                                font: {
+                                    family: "'Inter', sans-serif",
+                                    size: 11
+                                }
                             }
                         },
                         tooltip: {
@@ -347,8 +351,6 @@
                     }
                 }
             });
-
-            // 3. Combined Revenue Trend Line Chart
             new Chart(document.getElementById("lineChart"), {
                 type: "line",
                 data: {
@@ -356,7 +358,7 @@
                     datasets: [{
                         label: "Trend Penjualan Bulanan (IDR)",
                         data: sales,
-                        borderColor: "#3b82f6", // Bright Blue
+                        borderColor: "#3b82f6",
                         backgroundColor: "rgba(59, 130, 246, 0.05)",
                         fill: true,
                         tension: 0.35,
@@ -369,7 +371,9 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false },
+                        legend: {
+                            display: false
+                        },
                         tooltip: {
                             padding: 12,
                             callbacks: {
@@ -381,14 +385,24 @@
                     },
                     scales: {
                         y: {
-                            grid: { borderDash: [5, 5], color: "#e2e8f0" },
+                            grid: {
+                                borderDash: [5, 5],
+                                color: "#e2e8f0"
+                            },
                             ticks: {
-                                font: { family: "'Inter', sans-serif", size: 10 },
-                                callback: function(value) { return 'Rp' + (value / 1e6) + 'jt'; }
+                                font: {
+                                    family: "'Inter', sans-serif",
+                                    size: 10
+                                },
+                                callback: function(value) {
+                                    return 'Rp' + (value / 1e6) + 'jt';
+                                }
                             }
                         },
                         x: {
-                            grid: { display: false }
+                            grid: {
+                                display: false
+                            }
                         }
                     }
                 }
@@ -396,4 +410,4 @@
 
         });
     });
-</script>
+</script>

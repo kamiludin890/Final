@@ -1,5 +1,7 @@
 <?php
+session_start();
 include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
+$user_data = $_SESSION['user'];
 ?>
 <div class="row g-3">
     <div class="col">
@@ -16,22 +18,22 @@ include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
     <div class="col">
         <div>
             <label for="name" class="fw-bold">Nama</label>
-            <input type="text" name="name" id="name" class="form-control" value="">
+            <input type="text" name="name" id="name" class="form-control" value="<?= isset($user_data['nama']) ? $user_data['nama'] : '' ?>">
         </div>
         <div>
             <label for="telepon" class="fw-bold">Telepon</label>
-            <input type="text" name="telepon" id="telepon" class="form-control" value="">
+            <input type="text" name="telepon" id="telepon" class="form-control" value="<?= isset($user_data['telepon']) ? $user_data['telepon'] : '' ?>">
         </div>
     </div>
 </div>
 <div class="row g-3">
     <div class="col">
         <label for="username" class="fw-bold">Username</label>
-        <input type="text" name="username" id="username" class="form-control mb-2" value="admin">
+        <input type="text" name="username" id="username" class="form-control mb-2" value="<?= isset($user_data['username']) ? $user_data['username'] : '' ?>">
     </div>
     <div class="col">
         <label for="email" class="fw-bold">Email</label>
-        <input type="email" name="email" id="email" class="form-control mb-2" value="admin@example.com">
+        <input type="email" name="email" id="email" class="form-control mb-2" value="<?= isset($user_data['email']) ? $user_data['email'] : '' ?>">
     </div>
 </div>
 <div class="row g-3">
