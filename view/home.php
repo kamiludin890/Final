@@ -1,5 +1,7 @@
 <?php
 $user = $_SESSION['user']['nama'];
+$namaDepan = explode(' ', trim($user))[0];
+$profile_img = $_SESSION['user']['foto'];
 ?>
 <div id="wrapper">
 
@@ -48,9 +50,7 @@ $user = $_SESSION['user']['nama'];
             <div class="container-fluid">
                 <button class="btn btn-primary" id="toggleSidebar"><i class="bi bi-x-lg"></i>
                 </button>
-
-                <label class="navbar-brand ms-2"><img src="" alt=""><i class="bi bi-person-fill"></i> <?= $user ?></label>
-
+                <label class="navbar-brand ms-2"><img src="<?= $profile_img ?>" alt="Profile Image" class="rounded-circle" width="30" height="30"> <?= $namaDepan ?></label>
             </div>
         </nav>
         <div class="container-fluid p-4" id="main-content">
