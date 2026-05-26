@@ -46,6 +46,7 @@ if (isset($_POST['submit'])) {
         FROM INFORMATION_SCHEMA.SCHEMATA
         WHERE SCHEMA_NAME = '$dbname'
     ");
+
     if ($checkDb->num_rows == 0) {
 
         $createDb = $conn->query("
@@ -59,6 +60,7 @@ if (isset($_POST['submit'])) {
             die("❌ Gagal membuat database: " . $conn->error);
         }
     }
+
     $connDb = new mysqli(
         $host,
         $username,
@@ -78,20 +80,42 @@ if (isset($_POST['submit'])) {
     $isiFile  = "<?php\n";
 
     $isiFile .= "\$host = '$host';\n";
-
     $isiFile .= "\$dbname = '$dbname';\n";
-
     $isiFile .= "\$username = '$username';\n";
-
     $isiFile .= "\$password = '$password';\n";
-
     $isiFile .= "\$port = $port;\n";
 
-    if (file_put_contents($file, $isiFile)) {
+    if (!file_put_contents($file, $isiFile)) {
 
-        echo "✅ Koneksi berhasil, database siap digunakan.";
-    } else {
-
-        echo "⚠️ Database berhasil dibuat tapi config gagal disimpan.";
+        die("⚠️ Database berhasil dibuat tapi config gagal disimpan.");
     }
+
+    $folder = $_SERVER['DOCUMENT_ROOT'] . '/database/skema';
+
+    $files = glob($folder . '/*.php');
+
+    $files = array_values(array_filter($files, function ($file) {
+
+        return basename($file) !== 'config.php';
+    }));
+
+    foreach ($files as $fileSkema) {
+
+        $skema = null;
+
+        include $fileSkema;
+
+        if (!empty($skema)) {
+
+            if (!$connDb->query($skema)) {
+
+                die("❌ Gagal menjalankan skema "
+                    . basename($fileSkema)
+                    . " : "
+                    . $connDb->error);
+            }
+        }
+    }
+
+    echo "✅ Koneksi berhasil, database siap digunakan.";
 }

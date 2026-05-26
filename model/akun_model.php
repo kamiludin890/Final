@@ -43,7 +43,6 @@ try {
     $fotoPath = $oldData['foto'];
     $hashedPassword = $oldData['password'];
 
-    // Upload foto jika ada
     if (isset($_FILES['profile_img']) && $_FILES['profile_img']['error'] === 0) {
 
         $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/database/data/assets/profile/';
@@ -86,23 +85,18 @@ try {
         $width = imagesx($sourceImage);
         $height = imagesy($sourceImage);
 
-        // Ambil sisi terkecil untuk crop kotak
         $squareSize = min($width, $height);
 
-        // Posisi crop tengah
         $srcX = ($width - $squareSize) / 2;
         $srcY = ($height - $squareSize) / 2;
 
-        // Ukuran hasil akhir
         $finalSize = 300;
 
         $finalImage = imagecreatetruecolor($finalSize, $finalSize);
 
-        // Transparansi PNG/WebP
         imagealphablending($finalImage, false);
         imagesavealpha($finalImage, true);
 
-        // Crop + resize
         imagecopyresampled(
             $finalImage,
             $sourceImage,
@@ -119,8 +113,6 @@ try {
         $fileName = 'profile_' . time() . '.' . $ext;
 
         $targetFile = $uploadDir . $fileName;
-
-        // Simpan gambar
         switch ($mime) {
 
             case 'image/jpeg':

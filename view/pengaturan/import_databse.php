@@ -1,6 +1,9 @@
 <?php
 $folder = $_SERVER['DOCUMENT_ROOT'] . '/database/skema';
 $files = glob($folder . '/*.php');
+// $files = array_filter($files, function ($file) {
+//     return basename($file) !== 'user.php';
+// });
 include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
 ?>
 
@@ -23,8 +26,6 @@ include $_SERVER['DOCUMENT_ROOT'] . '/view/template/btn_kembali_second.php';
         <button class="btn btn-primary" id="import_sql">Import Database</button>
     </div>
     <script>
-        /** @format */
-
         $("#import_sql").click(function() {
             var tabel_name = $("#sql_file").val();
             if (tabel_name) {

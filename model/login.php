@@ -51,8 +51,8 @@ try {
 
         $defaultDept = 'IT';
         $defaultNama = 'Administrator';
-        $defaultEmail = 'admin@example.com';
-        $defaultPhone = '08123456789';
+        $defaultEmail = 'admin@it.com';
+        $defaultPhone = '-';
         $defaultAlamat = 'Jakarta, Indonesia';
         $defaultFoto = 'public/icon/Final.png';
         $defaultStatus = 1;
