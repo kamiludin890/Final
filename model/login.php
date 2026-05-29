@@ -74,7 +74,7 @@ try {
     }
 
     $stmtUser = $conn->prepare("
-        SELECT id, username, password, department, nama, email, no_telp, alamat, foto, status 
+        SELECT id, username, password, department, nama, email, no_telp, alamat, foto, akses, status 
         FROM user 
         WHERE username = ? AND status = 1
         LIMIT 1
@@ -96,6 +96,8 @@ try {
             $passwordInput === $row['password']
         ) {
 
+            $aksesRaw = $row['akses'] ? json_decode($row['akses'], true) : null;
+
             $_SESSION['user'] = [
                 'id' => (int)$row['id'],
                 'username' => $row['username'],
@@ -106,7 +108,8 @@ try {
                 'alamat' => $row['alamat'],
                 'foto' => !empty($row['foto'])
                     ? $row['foto']
-                    : 'public/icon/Final.png'
+                    : 'public/icon/Final.png',
+                'akses' => $aksesRaw  // null = semua akses (backward compatible)
             ];
 
             echo json_encode([

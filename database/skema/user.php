@@ -9,5 +9,6 @@ $skema = "CREATE TABLE IF NOT EXISTS user (
     no_telp VARCHAR(20),
     alamat TEXT,
     foto text,
+    akses text,
     status TINYINT DEFAULT 1
 );";

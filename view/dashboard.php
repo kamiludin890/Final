@@ -306,7 +306,7 @@
                     }
                 }
             });
-            t
+
             new Chart(document.getElementById("pieChart"), {
                 type: "doughnut",
                 data: {
