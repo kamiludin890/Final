@@ -2,12 +2,10 @@
 
 function hasAkses(menu) {
   if (typeof aksesUser === "undefined" || aksesUser === null) return true;
-  console.log(aksesUser)
   return aksesUser.indexOf(menu) !== -1;
 }
 
 function tampilAksesDitolak(namaMenu) {
-  console.log(namaMenu)
   $("#main-content").html(`
     <div class="d-flex flex-column align-items-center justify-content-center text-center py-5 text-muted" style="min-height:300px">
       <i class="bi bi-lock-fill" style="font-size:4rem;color:#dc3545;"></i>

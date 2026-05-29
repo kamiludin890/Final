@@ -99,7 +99,7 @@ function bolehMenu($menu, $aksesUser, $semuaAkses)
 <script>
     $(document).on("click", "#akun", function() {
         if ($(this).hasClass('disabled')) {
-            alert('❌ Anda tidak memiliki akses ke fitur ini.');
+
             return;
         }
         $("#second-content").hide();
@@ -107,7 +107,7 @@ function bolehMenu($menu, $aksesUser, $semuaAkses)
     });
     $(document).on("click", "#akun_akses", function() {
         if ($(this).hasClass('disabled')) {
-            alert('❌ Anda tidak memiliki akses ke fitur ini.');
+
             return;
         }
         $("#second-content").hide();
@@ -115,7 +115,7 @@ function bolehMenu($menu, $aksesUser, $semuaAkses)
     });
     $(document).on("click", "#info-pengguna", function() {
         if ($(this).hasClass('disabled')) {
-            alert('❌ Anda tidak memiliki akses ke fitur ini.');
+
             return;
         }
         $("#second-content").hide();
@@ -123,7 +123,7 @@ function bolehMenu($menu, $aksesUser, $semuaAkses)
     });
     $(document).on("click", "#tipe_material", function() {
         if ($(this).hasClass('disabled')) {
-            alert('❌ Anda tidak memiliki akses ke fitur ini.');
+
             return;
         }
         $("#second-content").hide();
@@ -131,7 +131,7 @@ function bolehMenu($menu, $aksesUser, $semuaAkses)
     });
     $(document).on("click", "#mata_uang", function() {
         if ($(this).hasClass('disabled')) {
-            alert('❌ Anda tidak memiliki akses ke fitur ini.');
+
             return;
         }
         $("#second-content").hide();
@@ -139,7 +139,7 @@ function bolehMenu($menu, $aksesUser, $semuaAkses)
     });
     $(document).on("click", "#company", function() {
         if ($(this).hasClass('disabled')) {
-            alert('❌ Anda tidak memiliki akses ke fitur ini.');
+
             return;
         }
         $("#second-content").hide();
@@ -147,7 +147,7 @@ function bolehMenu($menu, $aksesUser, $semuaAkses)
     });
     $(document).on("click", "#database", function() {
         if ($(this).hasClass('disabled')) {
-            alert('❌ Anda tidak memiliki akses ke fitur ini.');
+
             return;
         }
         $("#second-content").hide();
@@ -155,7 +155,7 @@ function bolehMenu($menu, $aksesUser, $semuaAkses)
     });
     $(document).on("click", "#import_db", function() {
         if ($(this).hasClass('disabled')) {
-            alert('❌ Anda tidak memiliki akses ke fitur ini.');
+
             return;
         }
         $("#second-content").hide();

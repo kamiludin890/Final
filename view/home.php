@@ -104,7 +104,6 @@ function bolehMenuGroup($group, $aksesUser, $semuaAkses)
     `;
     document.head.appendChild(style);
 
-    // Event handler untuk menu disabled
     $(document).on('click', '.nav-link.disabled', function(e) {
         e.preventDefault();
         alert('❌ Anda tidak memiliki akses ke menu ini.');

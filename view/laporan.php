@@ -53,7 +53,7 @@ function bolehMenu($menu, $aksesUser, $semuaAkses)
 
     $("#laporan-keuangan").click(function() {
         if ($(this).hasClass('disabled')) {
-            alert('❌ Anda tidak memiliki akses ke fitur ini.');
+
             return;
         }
         $("#second-content").hide();
@@ -61,7 +61,7 @@ function bolehMenu($menu, $aksesUser, $semuaAkses)
     })
     $("#laporan-stok").click(function() {
         if ($(this).hasClass('disabled')) {
-            alert('❌ Anda tidak memiliki akses ke fitur ini.');
+
             return;
         }
         $("#second-content").hide();
