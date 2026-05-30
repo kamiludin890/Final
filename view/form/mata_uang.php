@@ -23,7 +23,6 @@ $status = $id ? "UPDATE" : "INSERT";
             id: "<?= $id ?>"
         }, function(data) {
 
-            // ambil data pertama
             let d = data[0]
 
             if (d) {
@@ -40,12 +39,16 @@ $status = $id ? "UPDATE" : "INSERT";
         var currency = $("#tipe-currency").val()
         var deskripsi = $("#deskripsi-currency").val()
         $.post("model/mata_uang.php", {
-                id: <?= $id ?>,
+                id: '<?= $id ?>',
                 currency: currency,
                 deskripsi: deskripsi
             },
             function(data) {
-                if (data.status) {
+                if (data.status == "success") {
+                    alert(data.message)
+                    loadCurrency()
+                    $("#kembali-2").click()
+                } else {
                     alert(data.message)
                 }
             }, "json")
