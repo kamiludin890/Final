@@ -2,68 +2,132 @@
 
 # Final App
 
-Sistem ERP yang mudah dan detail
+Sistem ERP yang sederhana, lengkap, dan mudah digunakan untuk mengelola data operasional perusahaan.
 
-<img src="public/icon/Final.png" width="50">
+<img src="public/icon/Final.png" width="80" alt="Final App Logo">
 
-## Screenshots
+## Tampilan Aplikasi
 
-![App Screenshot](/screenshoot/home.png)
-![App Screenshot](/screenshoot/data.png)
-![App Screenshot](/screenshoot/laporan.png)
-![App Screenshot](/screenshoot/pengaturan.png)
+### Dashboard
 
-## Require
+![Dashboard](screenshoot/home.png)
 
-Project ini membutuhkan setidaknya
+### Data Master
 
-`Apache 2.4.66`
+![Data Master](screenshoot/data.png)
 
-`PHP 8.3.30`
+### Laporan
 
-`MySQL 8.4.3`
+![Laporan](screenshoot/laporan.png)
 
-`Composer`
+### Pengaturan
 
-`Extension php com_dotnet`
+![Pengaturan](screenshoot/pengaturan.png)
 
-Untuk lebih mudah dapat menggunakan
+---
 
-`Laragon` atau `Xampp`
+## Persyaratan Sistem
 
-## Installation
+Pastikan lingkungan server memenuhi spesifikasi berikut:
 
-Install project ini dengan clone repository
+| Komponen | Versi   |
+| -------- | ------- |
+| Apache   | 2.4.66  |
+| PHP      | 8.3.30  |
+| MySQL    | 8.4.3   |
+| Composer | Terbaru |
+
+### Rekomendasi
+
+Untuk mempermudah proses instalasi dan pengembangan, disarankan menggunakan:
+
+- Laragon
+- XAMPP
+
+---
+
+## Instalasi
+
+### 1. Clone Repository
 
 ```bash
- https://github.com/kamiludin890/Final.git
+git clone https://github.com/kamiludin890/Final.git
 ```
 
-Install dependency
+### 2. Masuk ke Direktori Project
 
 ```bash
-composer require twbs/bootstrap:5.3.8
+cd Final
 ```
 
+### 3. Install Dependency
+
 ```bash
+composer require twbs/bootstrap:^5.3
 composer require twbs/bootstrap-icons
 ```
 
-Setelah itu masuk dengan
+---
 
-```bash
+## Login Awal
+
+Gunakan akun bawaan berikut untuk login pertama kali:
+
+```text
 Username : admin
-
 Password : admin
 ```
 
-Masuk ke pengaturan lalu isi konfigurasi database
+---
 
-```bash
-Note : Saat koneksi berhasil sistem otomatis membuat semua tabel database yang diperlukan dan juga user admin otomatis masuk ke database
-```
+## Konfigurasi Database
 
-Setelahnya anda dapat keluar dari browser dan sistem siap digunakan
+1. Login menggunakan akun admin.
+2. Buka menu **Pengaturan**.
+3. Isi konfigurasi database sesuai server yang digunakan.
+4. Simpan konfigurasi.
+
+### Catatan
+
+Saat koneksi database berhasil:
+
+- Sistem akan membuat seluruh tabel yang diperlukan secara otomatis.
+- Akun administrator akan otomatis dibuat pada database.
+- Aplikasi siap digunakan tanpa proses migrasi tambahan.
+
+---
+
+## Cara Penggunaan
+
+Setelah konfigurasi database selesai:
+
+1. Logout dari aplikasi.
+2. Login kembali menggunakan akun administrator.
+3. Mulai mengelola data melalui menu yang tersedia.
+
+---
+
+## Fitur Utama
+
+- Dashboard informatif
+- Manajemen data master
+- Sistem laporan
+- Pengaturan aplikasi
+- Pembuatan database otomatis
+- Pembuatan akun administrator otomatis
+- Antarmuka berbasis Bootstrap 5
+
+---
+
+## Teknologi yang Digunakan
+
+- PHP 8.3
+- MySQL 8.4
+- Bootstrap 5
+- Bootstrap Icons
+- Apache Web Server
+
+---
 
 ## License
 
