@@ -49,6 +49,22 @@ composer require twbs/bootstrap:5.3.8
 composer require twbs/bootstrap-icons
 ```
 
+Setelah itu masuk dengan
+
+```bash
+Username : admin
+
+Password : admin
+```
+
+Masuk ke pengaturan lalu isi konfigurasi database
+
+```bash
+Note : Saat koneksi berhasil sistem otomatis membuat semua tabel database yang diperlukan dan juga user admin otomatis masuk ke database
+```
+
+Setelahnya anda dapat keluar dari browser dan sistem siap digunakan
+
 ## License
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/) [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
