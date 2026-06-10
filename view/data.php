@@ -59,15 +59,15 @@
                 </div>
 
                 <div class="col mt-2">
-                    <div class="card card-hov <?= !bolehMenu('data_faktur', $aksesUser, $semuaAkses) ? 'disabled' : '' ?>">
+                    <!-- <div class="card card-hov <?= !bolehMenu('data_faktur', $aksesUser, $semuaAkses) ? 'disabled' : '' ?>">
                         <div class="card-body <?= !bolehMenu('data_faktur', $aksesUser, $semuaAkses) ? 'disabled' : '' ?>" id="faktur" data-akses="data_faktur">
                             <i class="bi bi-cash-coin fs-1"></i>
                             <h5 class="card-title">Faktur</h5>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
-            <div class="row ">
+            <!-- <div class="row ">
                 <div class="col mt-2">
                     <div class="card card-hov <?= !bolehMenu('data_material', $aksesUser, $semuaAkses) ? 'disabled' : '' ?>">
                         <div class="card-body <?= !bolehMenu('data_material', $aksesUser, $semuaAkses) ? 'disabled' : '' ?>" id="beacukai" data-akses="data_beacukai">
@@ -76,7 +76,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
     <div id="third-content"></div>
